@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Material de Estática</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Formulario, videos recomendados y lista de chequeo para el examen de estática.">
+<link rel="stylesheet" href="styles.css">
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']] }, svg: { fontCache: 'global' }, options: { enableMenu: false } };</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<div class="nav-wrap"><nav class="glass" aria-label="Secciones"><span class="brand">Estática</span><div class="tabs-nav"><a href="./">Aprende</a><a href="ejercicios.html">Ejercicios</a><a href="material.html" aria-current="page">Videos y fórmulas</a></div></nav></div>
+<main>
+  <header class="page-hero glass">
+    <span class="num">MATERIAL DE APOYO</span>
+    <h1>Videos y fórmulas</h1>
+    <p class="lead">El formulario para repasar antes del examen, videos recomendados por tema y la lista de chequeo para el día de la prueba.</p>
+    <div class="cards3"><a class="go" href="#formulario"><b>Formulario</b><span>Todo en una página</span></a><a class="go" href="#videos"><b>Videos</b><span>15 videos por tema</span></a><a class="go" href="#examen"><b>Día del examen</b><span>Qué revisar</span></a></div>
+  </header>
+  <section class="mod glass" id="formulario">
+    <div><span class="num" style="font:600 13px var(--mono);color:var(--accent);letter-spacing:.06em">REPASO FINAL</span><h2>Formulario de una página</h2></div>
+    <div class="grid3">
+      <div class="tile"><h4>Fuerzas</h4><div class="formula">\(F_x = F \cos  \theta\)<br>\(F_y = F \operatorname{sen}  \theta\)<br>\(R = \sqrt{\Sigma F_x^2 + \Sigma F_y^2}\)<br>\(\theta  = \tan^{-1}(\Sigma F_y/\Sigma F_x)\)</div></div>
+      <div class="tile"><h4>Equilibrio</h4><div class="formula">\(\text{ Part}\mathrm{\acute{\imath}}\text{cula }:\)<br>\(\Sigma F_x = 0, \Sigma F_y = 0\)<br>\(\text{ Cuerpo r}\mathrm{\acute{\imath}}\text{gido }:\)<br>\(+ \Sigma M = 0\)</div></div>
+      <div class="tile"><h4>Momento</h4><div class="formula">\(M = F\cdot d\perp\)<br>\(M = x\cdot F_y - y\cdot F_x\)<br>\(\circlearrowleft  +\qquad \circlearrowright  -\)</div></div>
+      <div class="tile"><h4>Cargas distribuidas</h4><div class="formula">\(\text{ Uniforme }: \text{ wL en } L/2\)<br>\(\text{ Triangular }: ½\text{ wL }\)<br>\(a L/3 \text{ del lado alto }\)</div></div>
+      <div class="tile"><h4>Fricción</h4><div class="formula">\(f \le  \mu_s\cdot N\)<br>\(f_{\text{m}\mathrm{\acute{a}}\text{x}} = \mu_s\cdot N\)<br>\(\tan  \theta _\text{ crit } = \mu_s\)</div></div>
+      <div class="tile"><h4>Apoyos</h4><div class="formula">\(\text{ Rodillo }: 1\)<br>\(\text{ Pasador }: 2\)<br>\(\text{ Empotrado }: 3\)<br>\(\text{ Cable }: 1 (T)\)</div></div>
+    </div>
+  </section>
+  <section class="mod glass" id="videos">
+    <div><span class="num" style="font:600 13px var(--mono);color:var(--accent);letter-spacing:.06em">YOUTUBE</span><h2>Videos recomendados</h2></div>
+    <p style="color:var(--muted);max-width:66ch">Organizados en el mismo orden que la guía. Míralos a 1.25× o 1.5× y pausa antes de cada solución para intentarla tú.</p>
+
+    <div class="vgroup"><h3>Componentes y resultante</h3><div class="vids">
+      <a class="vid" href="https://www.youtube.com/watch?v=OXDrRFg9Z4I" target="_blank" rel="noopener"><span class="t">Curso · Clase 7</span><h4>Suma de fuerzas por componentes rectangulares</h4><p>Parte de un curso de estática completo, muy ordenado.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=sNViXvtFGII" target="_blank" rel="noopener"><span class="t">Fundamentos</span><h4>Descomposición de una fuerza en sus componentes rectangulares</h4><p>Desde cero, ideal si nunca has descompuesto vectores.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=ObUnOINK6CI" target="_blank" rel="noopener"><span class="t">Ejercicio</span><h4>Cómo calcular la fuerza resultante con componentes</h4><p>Igual al ejemplo 1 de esta guía.</p></a>
+    </div></div>
+
+    <div class="vgroup"><h3>Equilibrio de partícula y DCL</h3><div class="vids">
+      <a class="vid" href="https://www.youtube.com/watch?v=PYgOu2j33as" target="_blank" rel="noopener"><span class="t">Curso · Clase 9</span><h4>Equilibrio de una partícula</h4><p>Continúa el mismo curso: cables, nudos y tensiones.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=aMDm5Hmr2Og" target="_blank" rel="noopener"><span class="t">Ejemplos</span><h4>Diagrama de cuerpo libre y equilibrio de fuerzas</h4><p>Varios DCL resueltos uno tras otro.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=-g60udVKa6E" target="_blank" rel="noopener"><span class="t">Cuerpo rígido</span><h4>Equilibrio de cuerpos rígidos, DCL y reacciones en soportes</h4><p>Cómo reemplazar cada apoyo por sus reacciones.</p></a>
+    </div></div>
+
+    <div class="vgroup"><h3>Momento de una fuerza</h3><div class="vids">
+      <a class="vid" href="https://www.youtube.com/watch?v=yo1BlPgmK8I" target="_blank" rel="noopener"><span class="t">Teoría</span><h4>Torque o momento de una fuerza: explicación</h4><p>El concepto antes de los ejercicios.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=UO0oCC3drDg" target="_blank" rel="noopener"><span class="t">Ejercicios</span><h4>Cálculo de momentos. Estática para ingeniería</h4><p>Momentos en 2D con componentes y Varignon.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=L0gO9nsKGqs" target="_blank" rel="noopener"><span class="t">Beer · 3-1</span><h4>Aplicación a momentos 2D, ejercicio del libro de Beer</h4><p>Útil si tu curso usa Beer &amp; Johnston.</p></a>
+    </div></div>
+
+    <div class="vgroup"><h3>Reacciones en vigas y cargas distribuidas</h3><div class="vids">
+      <a class="vid" href="https://www.youtube.com/watch?v=liuyKEAqP_k" target="_blank" rel="noopener"><span class="t">Básico</span><h4>Calcular las reacciones en una viga simplemente apoyada</h4><p>El caso del ejemplo 4.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=WUjSL7JTZ2w" target="_blank" rel="noopener"><span class="t">Teoría</span><h4>Cargas distribuidas en vigas: resultante y ubicación</h4><p>Rectangulares, triangulares y trapezoidales.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=ngSJd-aT4cg" target="_blank" rel="noopener"><span class="t">Ejercicio</span><h4>Viga con carga distribuida y puntual: reacciones</h4><p>Combina ambas cargas, típico de examen.</p></a>
+    </div></div>
+
+    <div class="vgroup"><h3>Fricción y plano inclinado</h3><div class="vids">
+      <a class="vid" href="https://www.youtube.com/watch?v=WY1rjM5Wtz0" target="_blank" rel="noopener"><span class="t">Ejercicio</span><h4>Ejercicio de fricción en plano inclinado</h4><p>Ejes rotados, normal y fricción máxima.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=P4eeBsel0Tw" target="_blank" rel="noopener"><span class="t">Estática</span><h4>Sistema en equilibrio en plano inclinado sin rozamiento</h4><p>Para dominar las componentes del peso primero.</p></a>
+      <a class="vid" href="https://www.youtube.com/playlist?list=PLfm_CVo75zLYZ0lcvXsvqufIZvkmEIDFb" target="_blank" rel="noopener"><span class="t">Lista · Hibbeler</span><h4>Cap. 3: Equilibrio de una partícula (Hibbeler 14)</h4><p>Lista de ejercicios del libro, para practicar más.</p></a>
+    </div></div>
+  </section>
+  <section class="mod glass" id="examen">
+    <div><span class="num" style="font:600 13px var(--mono);color:var(--accent);letter-spacing:.06em">EL DÍA DEL EXAMEN</span><h2>Lista de chequeo</h2></div>
+    <div class="grid2">
+      <div class="tile"><h4>En cada problema</h4>
+        <ul class="clean">
+          <li>Dibuja el DCL aunque no lo pidan. Suele dar puntos.</li>
+          <li>Escribe la convención de signos (↺+) al inicio.</li>
+          <li>Convierte kg a N y todo a las mismas unidades.</li>
+          <li>Toma momentos donde haya más incógnitas.</li>
+          <li>Comprueba con una ecuación extra.</li>
+          <li>Da cada respuesta con unidades y sentido (↑, →, T o C).</li>
+        </ul>
+      </div>
+      <div class="tile"><h4>Señales de que algo está mal</h4>
+        <ul class="clean">
+          <li>Una tensión de cable negativa.</li>
+          <li>Una normal negativa (el cuerpo se despegó).</li>
+          <li>Un momento en un pasador o rodillo.</li>
+          <li>Más de 3 incógnitas en un cuerpo 2D.</li>
+          <li>La calculadora en radianes en vez de grados.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="site-footer">
+  <span class="credit">Hecho por <strong>José Luciano Mejía Arias</strong> · v1.0.0</span>
+  <div class="socials">
+    <a href="https://instagram.com/lucianomejia17" target="_blank" rel="noopener">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      Instagram
+    </a>
+    <a href="https://github.com/LucianoMejia" target="_blank" rel="noopener">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5 0-.24-.01-1.05-.01-1.9-2.78.62-3.37-1.22-3.37-1.22-.46-1.2-1.11-1.53-1.11-1.53-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.9 1.56 2.36 1.11 2.93.85.09-.67.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .28.18.6.69.5A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg>
+      GitHub
+    </a>
+    <a href="https://www.linkedin.com/in/jos%C3%A9-luciano-mej%C3%ADa-arias-a35806383/" target="_blank" rel="noopener">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 8.5H3.56V20.5H6.94V8.5Z"/><path d="M5.25 3.5A1.94 1.94 0 1 0 5.25 7.38 1.94 1.94 0 0 0 5.25 3.5Z"/><path d="M20.5 20.5H17.13v-6.3c0-1.5-.03-3.44-2.1-3.44-2.1 0-2.42 1.64-2.42 3.33v6.41H9.23V8.5h3.24v1.64h.05c.45-.85 1.55-1.75 3.2-1.75 3.42 0 4.06 2.25 4.06 5.18v6.93Z"/></svg>
+      LinkedIn
+    </a>
+  </div>
+</footer>
+
+</body>
+</html>
