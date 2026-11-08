@@ -180,6 +180,72 @@ const LF = (() => {
       s += dim(70, 270, 160, 'd = 0.4 m');
       return svg(s, 200);
     },
+
+    puerta() {
+      const ox = 50, oy = 120;
+      let s = wallL(ox - 8, 70, 170) + `<rect class="body" x="${ox}" y="${oy - 5}" width="250" height="10" rx="2"/>` + `<circle class="body" cx="${ox}" cy="${oy}" r="7"/><circle class="inkf" cx="${ox}" cy="${oy}" r="2.5"/>` + T(ox + 40, oy - 16, 'O (bisagra)', 'dl');
+      s += `<path class="g" d="M${ox + 250} ${oy} A250 250 0 0 0 ${R(ox + 250 * Math.cos(25 * D))} ${R(oy - 250 * Math.sin(25 * D))}"/>`;
+      s += arr(290, 175, 290, 127, 'f') + T(290, 186, 'Lejos:', 'fl') + T(290, 200, 'gira fácil', 'fl');
+      s += arr(95, 175, 95, 127, 'f') + T(95, 186, 'Cerca:', 'fl') + T(95, 200, 'cuesta más', 'fl');
+      s += arr(220, 100, 180, 100, 'f') + T(200, 86, 'Hacia O: no gira', 'fl');
+      s += T(170, 24, 'Vista desde arriba', 'dl');
+      return svg(s, 210);
+    },
+    alfiler() {
+      const ox = 110, oy = 110;
+      let s = `<rect class="body" x="40" y="${oy - 6}" width="260" height="12" rx="2"/>`;
+      s += line(ox, oy - 40, ox, oy + 8, 'ink', 'stroke-width="2"') + `<circle class="inkf" cx="${ox}" cy="${oy - 42}" r="6"/>` + T(ox - 46, oy - 42, 'alfiler', 'dl') + T(ox, oy + 26, 'O', '');
+      s += arr(270, 170, 270, 118, 'f') + T(270, 182, 'F', 'fl');
+      s += `<g transform="rotate(-10 ${ox} ${oy})" opacity=".35"><rect class="body" x="40" y="${oy - 6}" width="260" height="12" rx="2"/></g>`;
+      s += couple(ox, oy, 'ccw', 'r', '', 34) + T(200, 192, 'Solo puede girar alrededor de O', 'rl');
+      return svg(s, 200);
+    },
+    sentido4() {
+      const cell = (cx, cy, side, up) => {
+        let s = `<rect class="body" x="${cx - 60}" y="${cy - 4}" width="120" height="8" rx="2"/><circle class="inkf" cx="${cx}" cy="${cy}" r="4"/>` + T(cx, cy + 16, 'O', 'dl');
+        const fx = cx + side * 50;
+        s += up ? arr(fx, cy + 40, fx, cy + 6, 'f') : arr(fx, cy - 40, fx, cy - 6, 'f');
+        const ccw = (side > 0) === up;
+        s += couple(cx, cy, ccw ? 'ccw' : 'cw', 'r', '', 20);
+        s += T(cx + (side > 0 ? -38 : 38), cy - 32, ccw ? '↺ +' : '↻ −', ccw ? 'rl' : 'fl');
+        return s;
+      };
+      let s = line(170, 6, 170, 234, 'dimL') + line(6, 120, 334, 120, 'dimL');
+      s += cell(85, 62, 1, true) + cell(255, 62, 1, false) + cell(85, 180, -1, true) + cell(255, 180, -1, false);
+      s += T(85, 104, 'derecha, arriba', 'dl') + T(255, 104, 'derecha, abajo', 'dl') + T(85, 226, 'izquierda, arriba', 'dl') + T(255, 226, 'izquierda, abajo', 'dl');
+      return svg(s, 240);
+    },
+    convencion() {
+      const cx = 110, cy = 110;
+      let s = line(cx - 80, cy, cx + 90, cy, 'dimL') + line(cx, cy + 80, cx, cy - 80, 'dimL') + T(cx + 86, cy + 12, 'x', 'dl') + T(cx + 10, cy - 76, 'y', 'dl');
+      s += arr(cx, cy, cx + 60 * Math.cos(50 * D), cy - 60 * Math.sin(50 * D), 'g');
+      s += arc(cx, cy, 30, 0, 50) + T(cx + 44, cy - 16, 'θ', '');
+      s += couple(cx, cy, 'ccw', 'r', '', 52);
+      s += T(255, 70, '↺ antihorario', 'rl') + T(255, 88, 'positivo (+)', 'rl');
+      s += T(255, 140, '↻ horario', 'fl') + T(255, 158, 'negativo (−)', 'fl');
+      s += T(170, 206, 'Los ángulos también crecen en sentido antihorario', 'dl');
+      return svg(s, 215);
+    },
+    balance() {
+      const ox = 170, oy = 110;
+      let s = `<rect class="body" x="30" y="${oy - 5}" width="280" height="10" rx="2"/><polygon class="body" points="${ox},${oy + 5} ${ox - 14},${oy + 30} ${ox + 14},${oy + 30}"/>` + hatchG(ox - 30, ox + 30, oy + 30) + T(ox + 22, oy + 22, 'O', '');
+      s += arr(50, 40, 50, oy - 7, 'f') + T(50, 30, '300 N', 'fl') + arr(275, 40, 275, oy - 7, 'f') + T(275, 30, '400 N', 'fl');
+      s += couple(95, oy - 32, 'ccw', 'r', '', 14) + T(95, oy - 58, '+600', 'rl');
+      s += couple(235, oy - 32, 'cw', 'f', '', 14) + T(235, oy - 58, '−600', 'fl');
+      s += dim(50, ox, oy + 50, '2 m') + dim(ox, 275, oy + 50, '1.5 m');
+      s += T(170, 196, 'ΣM = +600 − 600 = 0 → no gira', '');
+      return svg(s, 210);
+    },
+    suma() {
+      const x0 = 50, k = 60, oy = 110;
+      let s = `<rect class="body" x="${x0}" y="${oy - 5}" width="${4 * k}" height="10" rx="2"/><circle class="inkf" cx="${x0}" cy="${oy}" r="5"/>` + T(x0 - 14, oy + 4, 'A', '');
+      s += arr(x0 + k, 50, x0 + k, oy - 7, 'f') + T(x0 + k, 40, '100 N', 'fl') + T(x0 + k, oy + 34, '−100', 'fl');
+      s += arr(x0 + 3 * k, 170, x0 + 3 * k, oy + 7, 'f') + T(x0 + 3 * k, 182, '200 N', 'fl') + T(x0 + 3 * k - 30, oy - 30, '+600', 'rl');
+      s += arr(x0 + 4 * k, 50, x0 + 4 * k, oy - 7, 'f') + T(x0 + 4 * k, 40, '150 N', 'fl') + T(x0 + 4 * k, oy + 34, '−600', 'fl');
+      s += couple(x0 + k, oy, 'cw', 'f', '', 12) + couple(x0 + 3 * k, oy, 'ccw', 'r', '', 12) + couple(x0 + 4 * k, oy, 'cw', 'f', '', 12);
+      s += T(170, 206, 'ΣM_A = −100 + 600 − 600 = −100 N·m ↻', '');
+      return svg(s, 215);
+    },
     /* ---- Módulo 6 ---- */
     estrategia() {
       let s = beam({ L: 8, sup: [{ x: 0, t: 'pin', n: 'A' }, { x: 8, t: 'roller', n: 'B' }], P: [{ x: 2, ang: -90, lab: '10 kN' }], W: [{ x1: 4, x2: 8, w1: 3, w2: 3 }], D: [[0, 2, '2 m'], [2, 4, '2 m'], [4, 8, '4 m']] }, 'd');
@@ -363,4 +429,43 @@ const QUIZ = {
     if (scroll) document.getElementById('ruta').scrollIntoView({ block: 'start' });
   }
   show(current, false);
+})();
+
+/* ===== Laboratorio de momento ===== */
+(() => {
+  const svgEl = document.getElementById('mlab');
+  if (!svgEl) return;
+  const { T, arr, line, couple } = FL;
+  const mx = document.getElementById('mx'), ma = document.getElementById('ma'), out = document.getElementById('mres');
+  const D = Math.PI / 180, ox = 170, oy = 120, k = 60, F = 100;
+  const R = v => Math.round(v * 10) / 10;
+  function draw() {
+    const x = Number(mx.value), a = Number(ma.value);
+    document.getElementById('mxo').textContent = (x > 0 ? '+' : '') + x + ' m' + (x < 0 ? ' (izquierda de O)' : x > 0 ? ' (derecha de O)' : ' (en O)');
+    document.getElementById('mao').textContent = a + '°';
+    const Fy = F * Math.sin(a * D), Fx = F * Math.cos(a * D);
+    let M = x * Fy; if (Math.abs(M) < 1e-6) M = 0;
+    const px = ox + x * k, ux = Math.cos(a * D), uy = -Math.sin(a * D);
+    const dir = M > 0 ? 'ccw' : M < 0 ? 'cw' : '';
+    const tilt = M > 0 ? -7 : M < 0 ? 7 : 0;
+    let s = line(20, oy, 320, oy, 'dimL');
+    s += `<g style="transition: transform 400ms cubic-bezier(.23,1,.32,1); transform-origin: ${ox}px ${oy}px; transform: rotate(${tilt}deg)"><rect class="body" x="${ox - 2.4 * k}" y="${oy - 6}" width="${4.8 * k}" height="12" rx="2"/>`;
+    s += line(px - ux * 300, oy - uy * 300, px + ux * 300, oy + uy * 300, 'g');
+    const t = (ox - px) * ux + (oy - oy) * uy, fx = px + t * ux, fy = oy + t * uy;
+    if (M !== 0) s += line(ox, oy, fx, fy, 'r', 'stroke-dasharray="4 3" stroke-width="2"') + T((ox + fx) / 2 + 10, (oy + fy) / 2 - 10, 'd', 'rl');
+    s += arr(px, oy, px + ux * 75, oy + uy * 75, 'f') + T(px + ux * 92, oy + uy * 92, 'F', 'fl') + `<circle class="inkf" cx="${px}" cy="${oy}" r="3.5"/>`;
+    s += '</g>';
+    s += `<circle class="body" cx="${ox}" cy="${oy}" r="7"/><circle class="inkf" cx="${ox}" cy="${oy}" r="2.5"/>` + T(ox, oy + 24, 'O', '');
+    if (dir) s += couple(ox, oy, dir, M > 0 ? 'r' : 'f', '', 30);
+    svgEl.innerHTML = s;
+    const d = Math.abs(x * Math.sin(a * D));
+    const sense = M > 0 ? '<b class="pos">↺ antihorario (+)</b>' : M < 0 ? '<b class="neg">↻ horario (−)</b>' : '<b>no gira</b>';
+    out.innerHTML = '<div class="big">M = ' + (M > 0 ? '+' : '') + R(M) + ' N·m</div><div>' + sense + '</div>' +
+      '<div class="small">Fy = 100·sen' + a + '° = ' + R(Fy) + ' N · d = ' + R(d) + ' m</div>' +
+      '<div class="small">M = x·Fy = (' + x + ')(' + R(Fy) + ') = ' + R(M) + ' N·m</div>' +
+      (M === 0 ? '<div class="small">' + (x === 0 ? 'La fuerza está en O.' : 'La línea de acción pasa por O: d = 0.') + '</div>' : '');
+  }
+  mx.addEventListener('input', draw); ma.addEventListener('input', draw);
+  document.querySelectorAll('#mom-lab [data-p]').forEach(b => b.onclick = () => { const [x, a] = b.dataset.p.split(','); mx.value = x; ma.value = a; draw(); });
+  draw();
 })();

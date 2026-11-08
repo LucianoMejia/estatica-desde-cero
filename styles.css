@@ -392,3 +392,16 @@ h3.sub { margin: 10px 0 0; font-size: 22px; letter-spacing: -.02em; }
 .go:hover { border-color: var(--accent); }
 .go b { color: var(--accent); font-size: 17px; }
 .go span { color: var(--muted); font-size: 14px; }
+
+/* Laboratorio de momento */
+.lab-wrap { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 760px) { .lab-wrap { grid-template-columns: minmax(0, 1fr); } }
+.lab-ctrl { display: grid; gap: 10px; min-width: 0; }
+.lab-ctrl input[type="range"] { width: 100%; accent-color: var(--accent); }
+.lab-pre { display: flex; flex-wrap: wrap; gap: 6px; }
+.mres { border: 1.5px solid var(--accent); border-radius: 16px; padding: 14px 16px; display: grid; gap: 4px; }
+.mres .big { font: 600 24px var(--font); letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.mres .pos { color: var(--react); }
+.mres .neg { color: var(--force); }
+.mres .small { color: var(--muted); font: 13px var(--mono); }
+@media (prefers-reduced-motion: reduce) { #mlab g { transition: none !important; } }
