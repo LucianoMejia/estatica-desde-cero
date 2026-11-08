@@ -1,0 +1,1557 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Guía de estática desde cero: teoría, ejemplos resueltos, 50 ejercicios con diagramas de cuerpo libre y videos.">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Estática desde Cero</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+</head><body>
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(', '\\)']] }, svg: { fontCache: 'global' }, options: { enableMenu: false } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+<style>
+/* Layout: fondo de manchas de color difuminadas + paneles de vidrio esmerilado (estilo "liquid glass"); barra de navegación flotante tipo píldora; módulos en orden de estudio, luego ejemplos resueltos, formulario y videos. */
+:root {
+  --bg: #eef1f7;
+  --fg: #11141b;
+  --muted: #5a6273;
+  --accent: #007aff;
+  --accent-soft: rgba(0,122,255,.12);
+  --good: #1f9d55;
+  --warn: #c2410c;
+  --glass: rgba(255,255,255,.58);
+  --glass-strong: rgba(255,255,255,.78);
+  --glass-edge: rgba(255,255,255,.85);
+  --glass-line: rgba(17,20,27,.07);
+  --glass-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 0 0 1px rgba(17,20,27,.05), 0 18px 50px -20px rgba(30,40,80,.35);
+  --blob1: #6ea8ff; --blob2: #ff8fc7; --blob3: #6ee7d8; --blob4: #ffc56e;
+  --ink: #11141b; --force: #ff3b30; --react: #007aff; --dim: #8a92a3;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
+  --mono: "SF Mono", ui-monospace, Menlo, Consolas, "Roboto Mono", monospace;
+  --ease: cubic-bezier(.23,1,.32,1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #07090f; --fg: #eef1f7; --muted: #9aa3b5; --accent: #0a84ff; --accent-soft: rgba(10,132,255,.18);
+    --good: #34d17a; --warn: #ff9f5a;
+    --glass: rgba(28,32,44,.5); --glass-strong: rgba(34,38,52,.78); --glass-edge: rgba(255,255,255,.14); --glass-line: rgba(255,255,255,.08);
+    --glass-shadow: 0 1px 0 rgba(255,255,255,.1) inset, 0 0 0 1px rgba(255,255,255,.06), 0 18px 50px -20px rgba(0,0,0,.8);
+    --blob1: #1d4fd8; --blob2: #a3236f; --blob3: #0f766e; --blob4: #9a5b0b;
+    --ink: #eef1f7; --force: #ff6961; --react: #4da3ff; --dim: #7c8597;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #07090f; --fg: #eef1f7; --muted: #9aa3b5; --accent: #0a84ff; --accent-soft: rgba(10,132,255,.18);
+  --good: #34d17a; --warn: #ff9f5a;
+  --glass: rgba(28,32,44,.5); --glass-strong: rgba(34,38,52,.78); --glass-edge: rgba(255,255,255,.14); --glass-line: rgba(255,255,255,.08);
+  --glass-shadow: 0 1px 0 rgba(255,255,255,.1) inset, 0 0 0 1px rgba(255,255,255,.06), 0 18px 50px -20px rgba(0,0,0,.8);
+  --blob1: #1d4fd8; --blob2: #a3236f; --blob3: #0f766e; --blob4: #9a5b0b;
+  --ink: #eef1f7; --force: #ff6961; --react: #4da3ff; --dim: #7c8597;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 84px); }
+body { background: var(--bg); color: var(--fg); font: 16px/1.6 var(--font); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+
+/* Fondo líquido */
+.aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.aurora i { position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%; filter: blur(80px); opacity: .55; animation: drift 28s ease-in-out infinite alternate; will-change: transform; }
+.aurora i:nth-child(1) { background: var(--blob1); top: -20vmax; left: -15vmax; }
+.aurora i:nth-child(2) { background: var(--blob2); top: 10vmax; right: -25vmax; animation-duration: 34s; }
+.aurora i:nth-child(3) { background: var(--blob3); bottom: -25vmax; left: 10vmax; animation-duration: 40s; }
+.aurora i:nth-child(4) { background: var(--blob4); top: 45vmax; left: -20vmax; opacity: .35; animation-duration: 46s; }
+@keyframes drift { to { transform: translate(8vmax, 6vmax) scale(1.12); } }
+
+.glass {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Navegación */
+.nav-wrap { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; padding-top: 12px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+nav { max-width: 1040px; margin: 0 auto; border-radius: 999px; padding: 6px; display: flex; gap: 6px; align-items: center; }
+nav .brand { font-weight: 650; letter-spacing: -.01em; padding: 6px 12px; white-space: nowrap; font-size: 15px; }
+nav .links { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; flex: 1; min-width: 0; }
+nav .links::-webkit-scrollbar { display: none; }
+nav a { color: var(--fg); text-decoration: none; font-size: 14px; padding: 7px 12px; border-radius: 999px; white-space: nowrap; transition: background-color 160ms ease; }
+nav a:hover { background: var(--accent-soft); }
+nav a.on { background: var(--accent); color: #fff; }
+.prog { display: flex; align-items: center; gap: 8px; padding: 0 8px 0 4px; font: 500 13px var(--mono); color: var(--muted); white-space: nowrap; }
+.prog svg { width: 26px; height: 26px; transform: rotate(-90deg); }
+.prog circle { fill: none; stroke-width: 3.5; }
+.prog .track { stroke: var(--glass-line); }
+.prog .val { stroke: var(--accent); stroke-linecap: round; transition: stroke-dashoffset 400ms var(--ease); }
+
+/* Contenido */
+main { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 36px 80px; display: grid; gap: 28px; }
+.hero { border-radius: 32px; padding: clamp(28px, 5vw, 56px); display: grid; gap: 18px; }
+.eyebrow { font: 600 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+h1 { font-size: clamp(38px, 7vw, 68px); line-height: 1.02; letter-spacing: -.035em; font-weight: 700; margin: 0; text-wrap: balance; }
+h1 span { background: linear-gradient(120deg, var(--accent), #af52de 60%, #ff2d55); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lead { font-size: clamp(17px, 2.2vw, 20px); color: var(--muted); max-width: 60ch; margin: 0; }
+.route { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.route a { text-decoration: none; color: var(--fg); font-size: 14px; padding: 8px 14px; border-radius: 999px; background: var(--glass-strong); border: 1px solid var(--glass-edge); display: inline-flex; gap: 8px; align-items: center; transition: transform 160ms var(--ease); }
+.route a:active { transform: scale(.97); }
+.route a b { font: 600 12px var(--mono); color: var(--accent); }
+.route a.done b { color: var(--good); }
+.tipbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; font-size: 14px; color: var(--muted); }
+
+section.mod { border-radius: 28px; padding: clamp(22px, 4vw, 40px); display: grid; gap: 18px; }
+.mod-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.mod-head .num { font: 600 13px var(--mono); color: var(--accent); letter-spacing: .06em; }
+h2 { font-size: clamp(26px, 4vw, 36px); letter-spacing: -.025em; line-height: 1.1; margin: 4px 0 0; text-wrap: balance; }
+h3 { font-size: 19px; letter-spacing: -.01em; margin: 6px 0 0; }
+p { margin: 0; }
+.prose { display: grid; gap: 12px; max-width: 68ch; }
+.prose p, .prose li { color: var(--fg); }
+ul.clean, ol.clean { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+
+.check { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--glass-strong); border: 1px solid var(--glass-edge); font-size: 14px; cursor: pointer; user-select: none; white-space: nowrap; transition: transform 160ms var(--ease), background-color 200ms ease; }
+.check:active { transform: scale(.97); }
+.check input { appearance: none; width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--dim); margin: 0; display: grid; place-items: center; transition: all 200ms ease; }
+.check input:checked { background: var(--good); border-color: var(--good); }
+.check input:checked::after { content: ""; width: 5px; height: 9px; border: solid #fff; border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg); }
+.check:has(input:checked) { color: var(--good); }
+.check:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+@media (max-width: 820px) { .grid3 { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (max-width: 620px) { .grid2, .grid3 { grid-template-columns: minmax(0,1fr); } }
+.tile { border-radius: 20px; padding: 18px; background: var(--glass-strong); border: 1px solid var(--glass-edge); display: grid; gap: 8px; align-content: start; min-width: 0; }
+.tile h4 { margin: 0; font-size: 16px; letter-spacing: -.01em; }
+.tile p { color: var(--muted); font-size: 15px; }
+.formula { font: 500 17px/1.5 var(--mono); background: var(--accent-soft); color: var(--fg); border-radius: 14px; padding: 12px 16px; overflow-x: auto; white-space: nowrap; }
+.formula small { font-family: var(--font); color: var(--muted); font-size: 13px; margin-left: 8px; }
+.note { border-radius: 18px; padding: 14px 18px; font-size: 15px; display: grid; gap: 4px; background: var(--glass-strong); border: 1px solid var(--glass-edge); }
+.note b { font-weight: 650; }
+.note.warn b { color: var(--warn); }
+.note.good b { color: var(--good); }
+code, .m { font-family: var(--mono); font-size: .9em; }
+
+.tbl { overflow-x: auto; border-radius: 18px; border: 1px solid var(--glass-edge); background: var(--glass-strong); }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 15px; }
+th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--glass-line); vertical-align: middle; }
+th { font: 600 12px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+td svg { display: block; width: 84px; height: 54px; }
+td .unk { font: 600 15px var(--mono); color: var(--react); }
+
+/* SVG de diagramas */
+.fig { border-radius: 18px; background: var(--glass-strong); border: 1px solid var(--glass-edge); padding: 12px; display: grid; place-items: center; min-width: 0; }
+.fig svg { width: 100%; max-width: 420px; height: auto; }
+svg .ink { stroke: var(--ink); fill: none; stroke-width: 2; }
+svg .inkf { fill: var(--ink); }
+svg .body { fill: var(--accent-soft); stroke: var(--ink); stroke-width: 2; }
+svg .hatch { stroke: var(--dim); stroke-width: 1.5; }
+svg .f { stroke: var(--force); stroke-width: 2.6; fill: none; }
+svg .ff { fill: var(--force); }
+svg .r { stroke: var(--react); stroke-width: 2.6; fill: none; }
+svg .rf { fill: var(--react); }
+svg .dimL { stroke: var(--dim); stroke-width: 1; fill: none; stroke-dasharray: 4 3; }
+svg text:not(mjx-container text) { font: 600 13px var(--mono); fill: var(--ink); }
+svg text.fl { fill: var(--force); }
+svg text.rl { fill: var(--react); }
+svg text.dl { fill: var(--muted); font-weight: 500; }
+
+/* Ejemplos */
+.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.seg { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--glass-strong); border: 1px solid var(--glass-edge); gap: 2px; }
+.seg button { border: 0; background: none; font: 500 14px var(--font); color: var(--muted); padding: 8px 14px; border-radius: 999px; cursor: pointer; transition: background-color 200ms ease, color 200ms ease, transform 160ms var(--ease); }
+.seg button:active { transform: scale(.97); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.ex { border-radius: 24px; padding: clamp(18px, 3vw, 28px); background: var(--glass-strong); border: 1px solid var(--glass-edge); display: grid; gap: 16px; }
+.ex-top { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 720px) { .ex-top { grid-template-columns: minmax(0,1fr); } }
+.ex .tag { font: 600 12px var(--mono); color: var(--accent); letter-spacing: .06em; text-transform: uppercase; }
+.ex .q { font-size: 16px; }
+.steps { display: grid; gap: 10px; counter-reset: s; }
+.step { display: grid; grid-template-columns: 30px minmax(0,1fr); gap: 12px; align-items: start; }
+.step::before { counter-increment: s; content: counter(s); width: 28px; height: 28px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font: 600 13px var(--mono); display: grid; place-items: center; }
+.step div { display: grid; gap: 4px; min-width: 0; }
+.step b { font-weight: 650; }
+.step .formula { font-size: 15px; padding: 8px 12px; }
+.answer { border-radius: 14px; padding: 12px 16px; background: color-mix(in srgb, var(--good) 14%, transparent); border: 1px solid color-mix(in srgb, var(--good) 35%, transparent); font-size: 15px; }
+.answer b { color: var(--good); }
+.sol { display: grid; gap: 14px; }
+body.practice .sol { display: none; }
+.reveal { display: none; justify-self: start; border: 0; cursor: pointer; font: 500 14px var(--font); padding: 9px 16px; border-radius: 999px; background: var(--accent); color: #fff; transition: transform 160ms var(--ease); }
+.reveal:active { transform: scale(.97); }
+body.practice .reveal { display: inline-block; }
+body.practice .ex.shown .sol { display: grid; }
+body.practice .ex.shown .reveal { display: none; }
+
+/* Videos */
+.vids { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 820px) { .vids { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (max-width: 520px) { .vids { grid-template-columns: minmax(0,1fr); } }
+.vid { text-decoration: none; color: var(--fg); border-radius: 18px; padding: 16px; background: var(--glass-strong); border: 1px solid var(--glass-edge); display: grid; gap: 8px; align-content: start; transition: transform 200ms var(--ease), box-shadow 200ms ease; min-width: 0; }
+.vid:hover { transform: translateY(-2px); box-shadow: var(--glass-shadow); }
+.vid:active { transform: scale(.98); }
+.vid .t { font: 600 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); display: flex; gap: 6px; align-items: center; }
+.vid .t::before { content: ""; width: 0; height: 0; border-left: 8px solid #ff0033; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+.vid h4 { margin: 0; font-size: 15px; line-height: 1.35; }
+.vid p { color: var(--muted); font-size: 13px; margin: 0; }
+.vgroup { display: grid; gap: 10px; }
+.vgroup h3 { font-size: 16px; color: var(--muted); font-weight: 600; }
+
+/* Banco de ejercicios */
+.bank-bar { display: grid; gap: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 1px solid var(--glass-edge); background: var(--glass-strong); color: var(--fg); font: 500 14px var(--font); padding: 7px 13px; border-radius: 999px; cursor: pointer; transition: transform 160ms var(--ease), background-color 200ms ease; }
+.chip:active { transform: scale(.97); }
+.chip[aria-pressed="true"] { background: var(--accent); color: #fff; border-color: transparent; }
+.chip .c { font: 500 12px var(--mono); opacity: .7; margin-left: 4px; }
+.bank-stats { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+.bar { height: 8px; border-radius: 999px; background: var(--glass-line); overflow: hidden; flex: 1; min-width: 160px; }
+.bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), #af52de); border-radius: inherit; transition: width 400ms var(--ease); }
+.bank-stats .m { color: var(--muted); font-size: 14px; white-space: nowrap; }
+.btn-g { border: 0; cursor: pointer; font: 500 14px var(--font); padding: 8px 14px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); transition: transform 160ms var(--ease); }
+.btn-g:active { transform: scale(.97); }
+.bank { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+@media (max-width: 760px) { .bank { grid-template-columns: minmax(0,1fr); } }
+.ej { border-radius: 20px; padding: 18px; background: var(--glass-strong); border: 1px solid var(--glass-edge); display: grid; gap: 10px; align-content: start; min-width: 0; transition: box-shadow 300ms ease; }
+.ej.flash { box-shadow: 0 0 0 3px var(--accent); }
+.ej.done { border-color: color-mix(in srgb, var(--good) 45%, transparent); }
+.ej-h { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.ej-h .no { font: 600 13px var(--mono); color: var(--fg); }
+.pill { font: 600 11px var(--mono); letter-spacing: .04em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+.lvl { font: 500 12px var(--mono); color: var(--muted); margin-left: auto; letter-spacing: .1em; }
+.lvl b { color: var(--warn); font-weight: 600; }
+.ej .q { font-size: 15.5px; }
+.ej-act { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.ej-act .check { padding: 6px 12px; font-size: 13px; margin-left: auto; }
+.ej .hint { font-size: 14px; color: var(--muted); border-left: 3px solid var(--accent); padding: 2px 0 2px 10px; }
+.ej .solx { display: grid; gap: 6px; }
+.ej .solx ol { margin: 0; padding-left: 1.3em; display: grid; gap: 4px; font: 14px/1.5 var(--mono); }
+.ej .answer { font-size: 14.5px; }
+.ej-fig, .ej-dcl { border-radius: 14px; background: color-mix(in srgb, var(--glass-strong) 70%, transparent); border: 1px solid var(--glass-edge); padding: 8px; display: grid; justify-items: center; gap: 2px; min-width: 0; }
+.ej-fig svg, .ej-dcl svg { width: 100%; max-width: 380px; height: auto; }
+.ej-dcl > span { justify-self: start; font: 600 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--react); }
+svg text.lab { text-anchor: middle; dominant-baseline: central; font-size: 11.5px; }
+svg .g { stroke: var(--dim); stroke-width: 1.6; stroke-dasharray: 5 4; fill: none; }
+svg .gf { fill: var(--dim); }
+svg text.gl { fill: var(--muted); }
+svg .rd { stroke: var(--react); stroke-width: 2; stroke-dasharray: 5 4; fill: none; }
+svg .rdf { fill: var(--react); }
+svg text.rdl { fill: var(--react); }
+svg .ff, svg .rf { stroke: none; }
+.bank [hidden], .ej [hidden] { display: none !important; }
+.empty { color: var(--muted); padding: 24px; text-align: center; grid-column: 1 / -1; }
+
+footer { position: relative; z-index: 1; text-align: center; color: var(--muted); font-size: 13px; padding: 0 16px 40px; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; } html { scroll-behavior: auto; } }
+
+/* ===== Tema monocromo: blanco / negro + azul de acento ===== */
+:root {
+  --bg: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --accent: #0071e3; --accent-soft: transparent;
+  --good: #0071e3; --warn: #0071e3;
+  --glass: #ffffff; --glass-strong: #ffffff; --glass-edge: #d2d2d7; --glass-line: rgba(60,60,67,.14);
+  --glass-shadow: none; --ink: #1d1d1f; --force: #1d1d1f; --react: #0071e3; --dim: #86868b; --separator: rgba(60,60,67,.14);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #000000; --fg: #f5f5f7; --muted: #98989d; --accent: #0a84ff; --accent-soft: transparent;
+    --good: #0a84ff; --warn: #0a84ff;
+    --glass: #000000; --glass-strong: #000000; --glass-edge: #38383a; --glass-line: rgba(84,84,88,.55);
+    --glass-shadow: none; --ink: #f5f5f7; --force: #f5f5f7; --react: #0a84ff; --dim: #8e8e93; --separator: rgba(84,84,88,.55);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #000000; --fg: #f5f5f7; --muted: #98989d; --accent: #0a84ff; --accent-soft: transparent;
+  --good: #0a84ff; --warn: #0a84ff;
+  --glass: #000000; --glass-strong: #000000; --glass-edge: #38383a; --glass-line: rgba(84,84,88,.55);
+  --glass-shadow: none; --ink: #f5f5f7; --force: #f5f5f7; --react: #0a84ff; --dim: #8e8e93; --separator: rgba(84,84,88,.55);
+}
+.glass { -webkit-backdrop-filter: none; backdrop-filter: none; }
+nav.glass { -webkit-backdrop-filter: blur(20px) saturate(180%); backdrop-filter: blur(20px) saturate(180%); background: color-mix(in srgb, var(--bg) 82%, transparent); }
+h1 span { background: none; color: var(--accent); -webkit-text-fill-color: var(--accent); }
+.formula { border: 1px solid var(--glass-edge); }
+.step::before { border: 1.5px solid var(--accent); }
+.btn-g { border: 1px solid var(--accent); background: transparent; }
+.pill { border: 1px solid var(--accent); }
+.answer { background: transparent; border: 1px solid var(--accent); }
+.answer b { color: var(--accent); }
+.note.warn b, .note.good b { color: var(--accent); }
+nav a:hover { background: transparent; color: var(--accent); }
+nav a.on:hover { color: #fff; }
+.vid .t::before { border-left-color: var(--accent); }
+.vid:hover { box-shadow: none; border-color: var(--accent); }
+.ej.done { border-color: var(--accent); }
+.ej-fig, .ej-dcl { background: transparent; }
+svg .body { fill: var(--bg); }
+.check:has(input:checked) { color: var(--accent); }
+.check input:checked { background: var(--accent); border-color: var(--accent); }
+.bar i { background: var(--accent); }
+.lvl b { color: var(--accent); }
+td .unk { color: var(--accent); }
+
+/* Pie (igual que Mi Horario, Mi Riego y Mi QR) */
+.site-footer {
+  position: relative; z-index: 1; max-width: 1040px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 40px; box-shadow: 0 -.5px 0 var(--separator);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+  font-size: 13px; color: var(--muted);
+}
+.site-footer .credit { font: 400 13px/1.4 var(--font); color: var(--muted); }
+.site-footer .credit strong { color: var(--fg); font-weight: 600; }
+.site-footer .socials { display: flex; gap: 18px; flex-wrap: wrap; }
+.site-footer .socials a { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); text-decoration: none; font-size: 13px; transition: color 150ms ease; }
+.site-footer .socials a svg { width: 16px; height: 16px; flex-shrink: 0; }
+@media (hover: hover) and (pointer: fine) { .site-footer .socials a:hover { color: var(--accent); } }
+@media (max-width: 640px) { .site-footer { flex-direction: column; align-items: center; text-align: center; } .site-footer .socials { justify-content: center; } }
+
+/* Fórmulas con MathJax (LaTeX) */
+.formula { font-family: var(--font); font-size: 17px; line-height: 2; }
+.step .formula { font-size: 16px; }
+.ej .solx ol { font: 15px/1.9 var(--font); min-width: 0; }
+.ej .solx li, .answer, .formula { overflow-x: auto; overflow-y: hidden; max-width: 100%; }
+.ej, .ej .solx, .step div { min-width: 0; }
+.answer { line-height: 1.9; }
+mjx-container { color: inherit; }
+mjx-container[display="false"] { margin: 0 .1em; }
+</style>
+
+
+<div class="nav-wrap">
+  <nav class="glass" aria-label="Secciones">
+    <span class="brand">Estática</span>
+    <div class="links" id="links">
+      <a href="#m1">Bases</a><a href="#m2">Vectores</a><a href="#m3">Partícula</a><a href="#m4">DCL</a><a href="#m5">Momento</a><a href="#m6">Cuerpo rígido</a><a href="#m7">Cargas dist.</a><a href="#m8">Fricción</a><a href="#m9">Armaduras</a><a href="#ejemplos">Ejemplos</a><a href="#ejercicios">Ejercicios</a><a href="#formulario">Formulario</a><a href="#videos">Videos</a><a href="#examen">Examen</a>
+    </div>
+    <div class="prog" title="Módulos que ya dominas">
+      <svg viewBox="0 0 26 26" aria-hidden="true"><circle class="track" cx="13" cy="13" r="10"/><circle class="val" id="ring" cx="13" cy="13" r="10" stroke-dasharray="62.83" stroke-dashoffset="62.83"/></svg>
+      <span id="progtxt">0/9</span>
+    </div>
+  </nav>
+</div>
+
+<main>
+  <header class="hero glass">
+    <span class="eyebrow">Guía de estudio · Mecánica vectorial</span>
+    <h1>Estática <span>desde cero</span></h1>
+    <p class="lead">Todo lo que necesitas para el examen, en el orden en que conviene aprenderlo: fuerzas y componentes, diagramas de cuerpo libre, momentos, equilibrio, cargas distribuidas, fricción y armaduras. Luego 8 ejercicios resueltos paso a paso y videos para reforzar.</p>
+    <div class="route" id="route">
+      <a href="#m1"><b>01</b>Bases</a><a href="#m2"><b>02</b>Vectores</a><a href="#m3"><b>03</b>Partícula</a><a href="#m4"><b>04</b>DCL</a><a href="#m5"><b>05</b>Momento</a><a href="#m6"><b>06</b>Cuerpo rígido</a><a href="#m7"><b>07</b>Cargas distribuidas</a><a href="#m8"><b>08</b>Fricción</a><a href="#m9"><b>09</b>Armaduras</a><a href="#ejercicios"><b>50</b>Ejercicios</a>
+    </div>
+    <p class="tipbar">Marca «Lo domino» al final de cada módulo para seguir tu avance. Se guarda en este navegador.</p>
+  </header>
+
+  <!-- M1 -->
+  <section class="mod glass" id="m1">
+    <div class="mod-head">
+      <div><span class="num">MÓDULO 01</span><h2>Las bases: qué estudia la estática</h2></div>
+      <label class="check"><input type="checkbox" id="c-m1" data-mod="m1">Lo domino</label>
+    </div>
+    <div class="prose">
+      <p>La estática estudia cuerpos que <b>no aceleran</b>: están quietos o se mueven a velocidad constante. Si no hay aceleración, por la segunda ley de Newton (<span class="m">\(\Sigma F = m\cdot a\)</span>) la suma de fuerzas es cero. Toda la materia sale de esa idea.</p>
+    </div>
+    <div class="grid3">
+      <div class="tile"><h4>Fuerza</h4><p>Un empuje o un jalón. Es un <b>vector</b>: tiene magnitud, dirección y sentido. Se mide en newtons (N), kilonewtons (kN) o libras (lb).</p></div>
+      <div class="tile"><h4>Peso</h4><p>La fuerza con la que la Tierra atrae una masa. Siempre apunta hacia abajo y actúa en el centro de gravedad.</p><div class="formula">\(W = m\cdot g\) <small>g = 9.81 m/s²</small></div></div>
+      <div class="tile"><h4>Partícula vs. cuerpo rígido</h4><p>Partícula: todas las fuerzas pasan por un punto, no puede girar. Cuerpo rígido: tiene tamaño, las fuerzas pueden hacerlo girar y por eso aparecen los momentos.</p></div>
+      <div class="tile"><h4>1.ª ley de Newton</h4><p>Un cuerpo en reposo sigue en reposo si la fuerza neta es cero. Es la base del equilibrio.</p></div>
+      <div class="tile"><h4>3.ª ley de Newton</h4><p>Acción y reacción: si la viga empuja el apoyo hacia abajo, el apoyo empuja la viga hacia arriba con la misma fuerza. De aquí salen las reacciones.</p></div>
+      <div class="tile"><h4>Unidades que no debes mezclar</h4><p>1 kN = 1000 N. Momento en N·m o kN·m. Carga distribuida en N/m o kN/m. Convierte todo antes de operar.</p></div>
+    </div>
+    <div class="note warn"><b>Ojo con la masa</b>Si el problema te da kilogramos, eso es masa, no fuerza. Multiplica por 9.81 para obtener el peso en N.</div>
+  </section>
+
+  <!-- M2 -->
+  <section class="mod glass" id="m2">
+    <div class="mod-head">
+      <div><span class="num">MÓDULO 02</span><h2>Vectores: componentes y resultante</h2></div>
+      <label class="check"><input type="checkbox" id="c-m2" data-mod="m2">Lo domino</label>
+    </div>
+    <div class="prose"><p>Casi todos los problemas empiezan igual: descomponer cada fuerza inclinada en una parte horizontal (x) y una vertical (y). Así sumas fuerzas como números normales.</p></div>
+    <div class="ex-top">
+      <div class="grid2" style="grid-template-columns:minmax(0,1fr)">
+        <div class="formula">\(F_x = F \cdot  \cos  \theta\)<br>\(F_y = F \cdot  \operatorname{sen}  \theta\) <small>θ medido desde el eje x</small></div>
+        <div class="formula">\(R = \sqrt{ (\Sigma F_x)^2 + (\Sigma F_y)^2 }\)<br>\(\theta _R = \tan^{-1}( \Sigma F_y / \Sigma F_x )\)</div>
+        <div class="note"><b>Regla práctica</b>El coseno va con el lado <i>pegado</i> al ángulo. Si te dan el ángulo con el eje y, entonces Fy = F·cos θ y Fx = F·sen θ.</div>
+      </div>
+      <div class="fig">
+        <svg viewBox="0 0 300 220" role="img" aria-label="Fuerza F descompuesta en Fx y Fy">
+          <line class="dimL" x1="30" y1="180" x2="280" y2="180"/><line class="dimL" x1="50" y1="200" x2="50" y2="20"/>
+          <line class="f" x1="50" y1="180" x2="220" y2="60"/><polygon class="ff" points="220,60 205,64 212,74"/>
+          <line class="r" x1="50" y1="180" x2="220" y2="180" stroke-dasharray="6 4"/><polygon class="rf" points="222,180 210,174 210,186"/>
+          <line class="r" x1="220" y1="180" x2="220" y2="62" stroke-dasharray="6 4"/>
+          <path class="ink" d="M95 180 A45 45 0 0 0 87 154" stroke-width="1.5"/>
+          <text x="100" y="168">θ</text><text class="fl" x="118" y="108">F</text><text class="rl" x="120" y="200">Fx = F cos θ</text><text class="rl" x="228" y="125">Fy</text>
+        </svg>
+      </div>
+    </div>
+    <h3>Signos por cuadrante</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>La fuerza apunta…</th><th>Fx</th><th>Fy</th></tr></thead>
+      <tbody>
+        <tr><td>Arriba y a la derecha</td><td>+</td><td>+</td></tr>
+        <tr><td>Arriba y a la izquierda</td><td>−</td><td>+</td></tr>
+        <tr><td>Abajo y a la izquierda</td><td>−</td><td>−</td></tr>
+        <tr><td>Abajo y a la derecha</td><td>+</td><td>−</td></tr>
+      </tbody>
+    </table></div>
+    <div class="grid2">
+      <div class="tile"><h4>Pendiente en vez de ángulo (triángulo 3-4-5)</h4><p>Si la fuerza viene con un triangulito de lados 3, 4 y 5, no calcules el ángulo: usa proporciones. Si el 4 es horizontal y el 3 vertical:</p><div class="formula">\(F_x = F\cdot (4/5) F_y = F\cdot (3/5)\)</div></div>
+      <div class="tile"><h4>Método del paralelogramo</h4><p>Para sumar solo dos fuerzas puedes usar el triángulo de fuerzas con la <b>ley del coseno</b> (magnitud) y la <b>ley del seno</b> (ángulo). Con tres o más fuerzas, usa siempre componentes.</p><div class="formula">\(R^2 = A^2 + B^2 - 2\text{ AB }\cdot \cos  \gamma\)</div></div>
+    </div>
+  </section>
+
+  <!-- M3 -->
+  <section class="mod glass" id="m3">
+    <div class="mod-head">
+      <div><span class="num">MÓDULO 03</span><h2>Equilibrio de una partícula</h2></div>
+      <label class="check"><input type="checkbox" id="c-m3" data-mod="m3">Lo domino</label>
+    </div>
+    <div class="prose">
+      <p>Cuando todas las fuerzas se cruzan en un mismo punto (un nudo de cables, un anillo, una polea), no hay giro posible. Solo necesitas dos ecuaciones:</p>
+    </div>
+    <div class="formula">\(\Sigma F_x = 0\qquad \Sigma F_y = 0\) <small>2 ecuaciones → máximo 2 incógnitas</small></div>
+    <div class="grid2">
+      <div class="tile"><h4>Cables y cuerdas</h4><p>Solo pueden <b>jalar</b>. La tensión T va a lo largo del cable, alejándose del punto que analizas. Si te sale T negativa, algo está mal: un cable no empuja.</p></div>
+      <div class="tile"><h4>Poleas ideales</h4><p>Una polea sin fricción solo cambia la dirección del cable. La tensión es la misma a ambos lados.</p></div>
+      <div class="tile"><h4>Resortes</h4><p>F = k·s, donde k es la rigidez (N/m) y s el alargamiento desde la longitud natural.</p></div>
+      <div class="tile"><h4>Teorema de Lamy (atajo)</h4><p>Con exactamente 3 fuerzas en equilibrio: cada fuerza dividida entre el seno del ángulo opuesto da lo mismo. F₁/sen α = F₂/sen β = F₃/sen γ.</p></div>
+    </div>
+  </section>
+
+  <!-- M4 -->
+  <section class="mod glass" id="m4">
+    <div class="mod-head">
+      <div><span class="num">MÓDULO 04</span><h2>El diagrama de cuerpo libre (DCL)</h2></div>
+      <label class="check"><input type="checkbox" id="c-m4" data-mod="m4">Lo domino</label>
+    </div>
+    <div class="prose"><p>Es el paso más importante del examen. Si el DCL está bien, lo demás es álgebra. Si está mal, nada sale bien aunque las cuentas sean perfectas.</p></div>
+    <h3>Los 6 pasos</h3>
+    <ol class="clean">
+      <li><b>Aísla</b> el cuerpo: dibújalo solo, sin el piso, la pared ni los apoyos.</li>
+      <li><b>Pon los ejes</b> x e y. En planos inclinados conviene rotarlos: x paralelo al plano.</li>
+      <li><b>Dibuja las fuerzas conocidas</b>: peso en el centro de gravedad, cargas puntuales, cargas distribuidas y momentos aplicados.</li>
+      <li><b>Reemplaza cada apoyo por sus reacciones</b> según la tabla de abajo. Si no sabes el sentido, supónlo.</li>
+      <li><b>Acota</b> distancias y ángulos. Los vas a necesitar para los momentos.</li>
+      <li><b>Cuenta incógnitas.</b> En 2D, si son más de 3 por cuerpo, no se resuelve solo con estática.</li>
+    </ol>
+    <h3>Tipos de apoyo y sus reacciones</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Apoyo</th><th>Dibujo</th><th>Qué impide</th><th>Incógnitas</th></tr></thead>
+      <tbody>
+        <tr><td>Rodillo / superficie lisa</td><td><svg viewBox="0 0 84 54" aria-hidden="true"><polygon class="body" points="42,8 28,30 56,30"/><circle class="ink" cx="32" cy="36" r="5"/><circle class="ink" cx="52" cy="36" r="5"/><line class="ink" x1="16" y1="42" x2="68" y2="42"/><line class="r" x1="72" y1="38" x2="72" y2="10"/><polygon class="rf" points="72,6 67,14 77,14"/></svg></td><td>Movimiento perpendicular a la superficie</td><td><span class="unk">1</span> · R ⊥ superficie</td></tr>
+        <tr><td>Pasador / articulación</td><td><svg viewBox="0 0 84 54" aria-hidden="true"><polygon class="body" points="42,10 26,38 58,38"/><circle class="inkf" cx="42" cy="12" r="3"/><line class="ink" x1="16" y1="40" x2="68" y2="40"/><line class="hatch" x1="22" y1="40" x2="16" y2="48"/><line class="hatch" x1="36" y1="40" x2="30" y2="48"/><line class="hatch" x1="50" y1="40" x2="44" y2="48"/><line class="hatch" x1="64" y1="40" x2="58" y2="48"/></svg></td><td>Desplazamiento en x y en y (sí deja girar)</td><td><span class="unk">2</span> · Rx, Ry</td></tr>
+        <tr><td>Empotramiento</td><td><svg viewBox="0 0 84 54" aria-hidden="true"><line class="ink" x1="20" y1="6" x2="20" y2="48"/><line class="hatch" x1="20" y1="10" x2="12" y2="16"/><line class="hatch" x1="20" y1="22" x2="12" y2="28"/><line class="hatch" x1="20" y1="34" x2="12" y2="40"/><rect class="body" x="20" y="20" width="56" height="12"/></svg></td><td>Desplazamiento en x, en y <b>y el giro</b></td><td><span class="unk">3</span> · Rx, Ry, M</td></tr>
+        <tr><td>Cable</td><td><svg viewBox="0 0 84 54" aria-hidden="true"><line class="ink" x1="14" y1="46" x2="60" y2="10"/><circle class="inkf" cx="14" cy="46" r="3"/><line class="r" x1="62" y1="8" x2="76" y2="-2"/></svg></td><td>Que el punto se aleje en la dirección del cable</td><td><span class="unk">1</span> · T (jala, a lo largo del cable)</td></tr>
+        <tr><td>Barra de dos fuerzas (eslabón)</td><td><svg viewBox="0 0 84 54" aria-hidden="true"><line class="ink" x1="16" y1="44" x2="68" y2="12" stroke-width="5"/><circle class="body" cx="16" cy="44" r="4"/><circle class="body" cx="68" cy="12" r="4"/></svg></td><td>Movimiento a lo largo de la barra</td><td><span class="unk">1</span> · F a lo largo de la barra</td></tr>
+      </tbody>
+    </table></div>
+    <div class="grid2">
+      <div class="note warn"><b>Errores que bajan nota</b>Olvidar el peso del cuerpo. Dibujar fuerzas internas en el DCL. Poner un momento en un pasador. Dibujar la fuerza que el cuerpo ejerce sobre el apoyo en lugar de la que el apoyo ejerce sobre el cuerpo.</div>
+      <div class="note good"><b>Si una reacción sale negativa</b>No pasa nada: solo apuntaba al revés de lo que supusiste. Deja el signo, escribe la respuesta con el sentido correcto y no redibujes.</div>
+    </div>
+  </section>
+
+  <!-- M5 -->
+  <section class="mod glass" id="m5">
+    <div class="mod-head">
+      <div><span class="num">MÓDULO 05</span><h2>Momento de una fuerza</h2></div>
+      <label class="check"><input type="checkbox" id="c-m5" data-mod="m5">Lo domino</label>
+    </div>
+    <div class="prose"><p>El momento (también llamado torque) mide qué tanto una fuerza tiende a hacer <b>girar</b> un cuerpo alrededor de un punto. Por eso abrir una puerta empujando lejos de las bisagras cuesta menos.</p></div>
+    <div class="ex-top">
+      <div style="display:grid;gap:12px">
+        <div class="formula">\(M_{O} = F \cdot  d\) <small>d = distancia perpendicular</small></div>
+        <div class="formula">\(M_{O} = x\cdot F_y - y\cdot F_x\) <small>con componentes</small></div>
+        <div class="note"><b>Convención de signos</b>Antihorario ↺ positivo, horario ↻ negativo. Puedes usar la contraria, pero mantenla en todo el problema.</div>
+      </div>
+      <div class="fig">
+        <svg viewBox="0 0 300 200" role="img" aria-label="Momento de una fuerza respecto a O con brazo d">
+          <circle class="inkf" cx="50" cy="150" r="5"/><text x="34" y="175">O</text>
+          <line class="ink" x1="50" y1="150" x2="250" y2="150" stroke-width="6" stroke-linecap="round"/>
+          <line class="f" x1="230" y1="150" x2="230" y2="50"/><polygon class="ff" points="230,46 224,58 236,58"/>
+          <text class="fl" x="240" y="80">F</text>
+          <line class="dimL" x1="50" y1="175" x2="230" y2="175"/><text class="dl" x="130" y="192">d</text>
+          <path class="r" d="M80 115 A50 50 0 0 0 30 110"/><polygon class="rf" points="26,108 36,104 34,116"/><text class="rl" x="70" y="100">M ↺</text>
+        </svg>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="tile"><h4>Teorema de Varignon</h4><p>El momento de una fuerza es igual a la suma de los momentos de sus componentes. Es el truco más útil: descompón en Fx y Fy y multiplica cada una por su distancia perpendicular.</p></div>
+      <div class="tile"><h4>Si la fuerza pasa por el punto</h4><p>Su momento es <b>cero</b>, porque d = 0. Por eso conviene tomar momentos donde se cruzan varias incógnitas: desaparecen de la ecuación.</p></div>
+      <div class="tile"><h4>Par de fuerzas</h4><p>Dos fuerzas iguales, opuestas y paralelas separadas una distancia d. Su suma da cero, pero producen un momento M = F·d que es el mismo respecto a cualquier punto.</p></div>
+      <div class="tile"><h4>En 3D (si lo ven)</h4><p>M = r × F, con el determinante de i, j, k. La magnitud es r·F·sen θ.</p></div>
+    </div>
+  </section>
+
+  <!-- M6 -->
+  <section class="mod glass" id="m6">
+    <div class="mod-head">
+      <div><span class="num">MÓDULO 06</span><h2>Equilibrio de un cuerpo rígido</h2></div>
+      <label class="check"><input type="checkbox" id="c-m6" data-mod="m6">Lo domino</label>
+    </div>
+    <div class="prose"><p>Ahora el cuerpo puede girar, así que además de que las fuerzas se anulen, los momentos también deben anularse.</p></div>
+    <div class="formula">\(\Sigma F_x = 0\qquad \Sigma F_y = 0\qquad \Sigma M_{A} = 0\) <small>3 ecuaciones → máximo 3 incógnitas</small></div>
+    <h3>Estrategia que casi siempre funciona</h3>
+    <ol class="clean">
+      <li>Haz el DCL completo y cuenta las incógnitas.</li>
+      <li>Reemplaza las cargas distribuidas por su resultante (módulo 07).</li>
+      <li>Toma <b>ΣM en el apoyo con más incógnitas</b> (normalmente el pasador). Te queda una sola incógnita: despéjala.</li>
+      <li>Usa ΣFy = 0 y ΣFx = 0 para las demás.</li>
+      <li><b>Comprueba</b> tomando momentos en otro punto. Debe darte cero.</li>
+    </ol>
+    <div class="grid3">
+      <div class="tile"><h4>Isostático</h4><p>Incógnitas = 3. Se resuelve con estática. Es lo que te van a poner.</p></div>
+      <div class="tile"><h4>Hiperestático</h4><p>Incógnitas &gt; 3. Faltan ecuaciones (se ve en resistencia de materiales).</p></div>
+      <div class="tile"><h4>Inestable</h4><p>Incógnitas &lt; 3, o reacciones mal dispuestas (todas paralelas o concurrentes). El cuerpo se mueve.</p></div>
+    </div>
+    <div class="note"><b>Elemento de dos fuerzas</b>Si una barra tiene fuerzas solo en sus dos extremos y no tiene carga en medio (ni peso), las dos fuerzas son iguales, opuestas y van a lo largo de la línea que une los extremos. Te ahorra una incógnita.</div>
+  </section>
+
+  <!-- M7 -->
+  <section class="mod glass" id="m7">
+    <div class="mod-head">
+      <div><span class="num">MÓDULO 07</span><h2>Cargas distribuidas</h2></div>
+      <label class="check"><input type="checkbox" id="c-m7" data-mod="m7">Lo domino</label>
+    </div>
+    <div class="prose"><p>Una carga repartida a lo largo de una viga (en N/m o kN/m) se reemplaza por una sola fuerza: su <b>resultante</b>. Vale lo que el <b>área</b> del diagrama de carga y actúa en su <b>centroide</b>.</p></div>
+    <div class="grid2">
+      <div class="tile">
+        <h4>Rectangular (uniforme)</h4>
+        <svg viewBox="0 0 260 110" style="width:100%;height:auto" aria-hidden="true">
+          <rect x="20" y="20" width="220" height="30" fill="none" class="ink" stroke-width="1.5"/>
+          <g class="f"><line x1="40" y1="20" x2="40" y2="48"/><line x1="80" y1="20" x2="80" y2="48"/><line x1="120" y1="20" x2="120" y2="48"/><line x1="160" y1="20" x2="160" y2="48"/><line x1="200" y1="20" x2="200" y2="48"/></g>
+          <line class="ink" x1="20" y1="60" x2="240" y2="60" stroke-width="5"/>
+          <line class="dimL" x1="20" y1="80" x2="130" y2="80"/><text class="dl" x="58" y="98">L/2</text>
+          <text x="226" y="14" class="fl">w</text>
+        </svg>
+        <div class="formula">\(R = w\cdot L \text{ en } L/2\)</div>
+      </div>
+      <div class="tile">
+        <h4>Triangular</h4>
+        <svg viewBox="0 0 260 110" style="width:100%;height:auto" aria-hidden="true">
+          <polygon points="20,50 240,10 240,50" fill="none" class="ink" stroke-width="1.5"/>
+          <g class="f"><line x1="80" y1="40" x2="80" y2="48"/><line x1="130" y1="31" x2="130" y2="48"/><line x1="180" y1="22" x2="180" y2="48"/><line x1="225" y1="14" x2="225" y2="48"/></g>
+          <line class="ink" x1="20" y1="60" x2="240" y2="60" stroke-width="5"/>
+          <line class="dimL" x1="166" y1="80" x2="240" y2="80"/><text class="dl" x="185" y="98">L/3</text>
+          <text x="226" y="8" class="fl">w</text>
+        </svg>
+        <div class="formula">\(R = ½\cdot w\cdot L \text{ a } L/3 \text{ del lado alto }\)</div>
+      </div>
+    </div>
+    <div class="note"><b>Trapezoidal</b>Divídela en un rectángulo y un triángulo, calcula las dos resultantes por separado y úsalas como dos fuerzas puntuales.</div>
+  </section>
+
+  <!-- M8 -->
+  <section class="mod glass" id="m8">
+    <div class="mod-head">
+      <div><span class="num">MÓDULO 08</span><h2>Fricción seca</h2></div>
+      <label class="check"><input type="checkbox" id="c-m8" data-mod="m8">Lo domino</label>
+    </div>
+    <div class="prose"><p>La fricción se opone al deslizamiento y actúa paralela a la superficie de contacto. No siempre vale μN: solo alcanza ese valor máximo cuando el cuerpo está a punto de moverse.</p></div>
+    <div class="grid2">
+      <div class="formula">\(f \le  \mu_s \cdot  N\) <small>sin deslizar</small></div>
+      <div class="formula">\(f = \mu_s \cdot  N\) <small>a punto de deslizar</small></div>
+      <div class="formula">\(f = \mu_k \cdot  N\) <small>ya deslizando (μk &lt; μs)</small></div>
+      <div class="formula">\(\tan  \theta  = \mu_s\) <small>ángulo crítico del plano</small></div>
+    </div>
+    <h3>Cómo resolver «¿se mueve o no?»</h3>
+    <ol class="clean">
+      <li>Supón que está en equilibrio. Calcula la fricción <b>necesaria</b> f con ΣF = 0.</li>
+      <li>Calcula la fricción <b>máxima</b> disponible: f_max = μs·N.</li>
+      <li>Si f ≤ f_max, está quieto y la fricción vale f. Si f &gt; f_max, desliza.</li>
+    </ol>
+    <div class="note"><b>Plano inclinado</b>Con ejes rotados: N = W·cos θ y la componente que lo hace bajar es W·sen θ.</div>
+  </section>
+
+  <!-- M9 -->
+  <section class="mod glass" id="m9">
+    <div class="mod-head">
+      <div><span class="num">MÓDULO 09</span><h2>Armaduras</h2></div>
+      <label class="check"><input type="checkbox" id="c-m9" data-mod="m9">Lo domino</label>
+    </div>
+    <div class="prose"><p>Una armadura es un conjunto de barras unidas en nodos con pasadores, con las cargas aplicadas solo en los nodos. Cada barra es un elemento de dos fuerzas: está en <b>tensión</b> (T, jala el nodo) o en <b>compresión</b> (C, empuja el nodo).</p></div>
+    <div class="grid2">
+      <div class="tile"><h4>Método de los nodos</h4><p>Primero calcula las reacciones con la armadura completa. Luego ve nodo por nodo, empezando por uno con máximo 2 incógnitas, y aplica ΣFx = 0 y ΣFy = 0. Supón todas las barras en tensión: si sale negativo, es compresión.</p></div>
+      <div class="tile"><h4>Método de las secciones</h4><p>Corta la armadura por máximo 3 barras y analiza un lado como cuerpo rígido (3 ecuaciones). Ideal cuando solo piden una barra del centro.</p></div>
+      <div class="tile"><h4>Barras de fuerza cero</h4><p>Si en un nodo sin carga llegan dos barras no colineales, ambas valen cero. Si llegan tres y dos son colineales, la tercera vale cero.</p></div>
+      <div class="tile"><h4>Comprobar si es determinada</h4><p>b + r = 2n, donde b = barras, r = reacciones y n = nodos.</p></div>
+    </div>
+  </section>
+
+  <!-- EJEMPLOS -->
+  <section class="mod glass" id="ejemplos">
+    <div class="toolbar">
+      <div><span class="num" style="font:600 13px var(--mono);color:var(--accent);letter-spacing:.06em">PRÁCTICA</span><h2>Ejemplos resueltos paso a paso</h2></div>
+      <div class="seg" role="group" aria-label="Modo de los ejemplos">
+        <button type="button" id="b-study" aria-pressed="true">Ver soluciones</button>
+        <button type="button" id="b-practice" aria-pressed="false">Modo práctica</button>
+      </div>
+    </div>
+    <p style="color:var(--muted);max-width:66ch">En modo práctica las soluciones se ocultan: intenta cada problema en papel y luego revélalo. Negro = fuerzas aplicadas, azul = reacciones o incógnitas.</p>
+
+    <!-- E1 -->
+    <article class="ex">
+      <span class="tag">Ejemplo 1 · Componentes y resultante</span>
+      <div class="ex-top">
+        <p class="q">Tres fuerzas actúan sobre un punto: F₁ = 200 N a 30° sobre el eje +x; F₂ = 150 N a 60° sobre el eje −x (arriba a la izquierda); F₃ = 100 N vertical hacia abajo. Halla la resultante (magnitud y dirección).</p>
+        <div class="fig"><svg viewBox="0 0 300 200" role="img" aria-label="Tres fuerzas concurrentes">
+          <line class="dimL" x1="20" y1="110" x2="280" y2="110"/><line class="dimL" x1="150" y1="10" x2="150" y2="195"/>
+          <line class="f" x1="150" y1="110" x2="250" y2="52"/><polygon class="ff" points="254,50 240,52 246,62"/><text class="fl" x="230" y="40">F₁=200</text>
+          <line class="f" x1="150" y1="110" x2="95" y2="25"/><polygon class="ff" points="93,22 94,36 104,30"/><text class="fl" x="40" y="22">F₂=150</text>
+          <line class="f" x1="150" y1="110" x2="150" y2="180"/><polygon class="ff" points="150,186 144,174 156,174"/><text class="fl" x="158" y="182">F₃=100</text>
+          <text class="dl" x="190" y="104">30°</text><text class="dl" x="102" y="104">60°</text>
+        </svg></div>
+      </div>
+      <button class="reveal" type="button">Mostrar solución</button>
+      <div class="sol">
+        <div class="steps">
+          <div class="step"><div><b>Componentes en x</b><div class="formula">\(\Sigma F_x = 200\cdot \cos 30^\circ  - 150\cdot \cos 60^\circ  + 0 = 173.2 - 75 = 98.2\,\text{N}\)</div><span>F₂ apunta a la izquierda: su Fx es negativa.</span></div></div>
+          <div class="step"><div><b>Componentes en y</b><div class="formula">\(\Sigma F_y = 200\cdot \operatorname{sen} 30^\circ  + 150\cdot \operatorname{sen} 60^\circ  - 100 = 100 + 129.9 - 100 = 129.9\,\text{N}\)</div></div></div>
+          <div class="step"><div><b>Magnitud</b><div class="formula">\(R = \sqrt{98.2^2 + 129.9^2} = 162.8\,\text{N}\)</div></div></div>
+          <div class="step"><div><b>Dirección</b><div class="formula">\(\theta  = \tan^{-1}(129.9 / 98.2) = 52.9^\circ\)</div><span>Ambas sumas son positivas, así que R está en el primer cuadrante.</span></div></div>
+        </div>
+        <div class="answer"><b>\(R = 162.8\,\text{N} \text{ a } 52.9^\circ  \text{ sobre el eje } +x\).</b></div>
+      </div>
+    </article>
+
+    <!-- E2 -->
+    <article class="ex">
+      <span class="tag">Ejemplo 2 · Partícula colgada de dos cables</span>
+      <div class="ex-top">
+        <p class="q">Un semáforo de 400 N cuelga de un nudo C sostenido por dos cables: el cable A forma 30° con la horizontal hacia la izquierda y el cable B forma 45° con la horizontal hacia la derecha. Halla las tensiones T_A y T_B.</p>
+        <div class="fig"><svg viewBox="0 0 300 200" role="img" aria-label="DCL del nudo con dos cables y peso">
+          <line class="dimL" x1="40" y1="100" x2="260" y2="100"/>
+          <line class="r" x1="150" y1="100" x2="60" y2="48"/><polygon class="rf" points="56,46 70,46 64,56"/><text class="rl" x="50" y="36">T_A</text>
+          <line class="r" x1="150" y1="100" x2="230" y2="20"/><polygon class="rf" points="234,16 222,20 230,28"/><text class="rl" x="236" y="30">T_B</text>
+          <line class="f" x1="150" y1="100" x2="150" y2="175"/><polygon class="ff" points="150,181 144,169 156,169"/><text class="fl" x="158" y="172">400 N</text>
+          <circle class="inkf" cx="150" cy="100" r="4"/><text x="156" y="118">C</text>
+          <text class="dl" x="96" y="94">30°</text><text class="dl" x="188" y="94">45°</text>
+        </svg></div>
+      </div>
+      <button class="reveal" type="button">Mostrar solución</button>
+      <div class="sol">
+        <div class="steps">
+          <div class="step"><div><b>DCL del nudo C</b><span>Tres fuerzas concurrentes: T_A (arriba-izquierda), T_B (arriba-derecha) y el peso. Es una partícula: 2 ecuaciones, 2 incógnitas.</span></div></div>
+          <div class="step"><div><b>\(\Sigma F_x = 0\)</b><div class="formula">\(-T_{A}\cdot \cos 30^\circ  + T_{B}\cdot \cos 45^\circ  = 0 \;\rightarrow\; T_{B} = 1.2247\cdot T_{A}\)</div></div></div>
+          <div class="step"><div><b>\(\Sigma F_y = 0\)</b><div class="formula">\(T_{A}\cdot \operatorname{sen} 30^\circ  + T_{B}\cdot \operatorname{sen} 45^\circ  - 400 = 0\)</div></div></div>
+          <div class="step"><div><b>Sustituye</b><div class="formula">\(0.5\cdot T_{A} + (1.2247\cdot T_{A})(0.7071) = 400 \;\rightarrow\; 1.366\cdot T_{A} = 400\)</div></div></div>
+        </div>
+        <div class="answer"><b>\(T_{A} = 292.8\,\text{N} \text{ y } T_{B} = 358.6\,\text{N}\).</b> Ambas positivas: los cables jalan, como debe ser. El cable más inclinado (más vertical) carga más.</div>
+      </div>
+    </article>
+
+    <!-- E3 -->
+    <article class="ex">
+      <span class="tag">Ejemplo 3 · Momento con Varignon</span>
+      <div class="ex-top">
+        <p class="q">Una fuerza de 500 N actúa en el punto A (3 m, 2 m) medido desde O, con un ángulo de 60° sobre la horizontal. Halla el momento respecto a O.</p>
+        <div class="fig"><svg viewBox="0 0 300 200" role="img" aria-label="Fuerza aplicada en A con coordenadas 3 y 2 metros">
+          <line class="dimL" x1="30" y1="170" x2="280" y2="170"/><line class="dimL" x1="40" y1="185" x2="40" y2="10"/>
+          <circle class="inkf" cx="40" cy="170" r="4"/><text x="22" y="190">O</text>
+          <line class="ink" x1="40" y1="170" x2="190" y2="100" stroke-dasharray="3 3" stroke-width="1"/>
+          <circle class="inkf" cx="190" cy="100" r="4"/><text x="196" y="118">A (3, 2)</text>
+          <line class="f" x1="190" y1="100" x2="240" y2="15"/><polygon class="ff" points="242,10 232,20 244,24"/><text class="fl" x="246" y="38">500 N</text>
+          <text class="dl" x="204" y="88">60°</text>
+        </svg></div>
+      </div>
+      <button class="reveal" type="button">Mostrar solución</button>
+      <div class="sol">
+        <div class="steps">
+          <div class="step"><div><b>Componentes</b><div class="formula">\(F_x = 500\cdot \cos 60^\circ  = 250\,\text{N}\qquad F_y = 500\cdot \operatorname{sen} 60^\circ  = 433.0\,\text{N}\)</div></div></div>
+          <div class="step"><div><b>Momento de cada componente</b><span>Fy (hacia arriba) a 3 m a la derecha de O gira antihorario (+). Fx (hacia la derecha) a 2 m por encima de O gira horario (−).</span><div class="formula">\(M_{O} = x\cdot F_y - y\cdot F_x = 3(433.0) - 2(250)\)</div></div></div>
+        </div>
+        <div class="answer"><b>\(M_{O} = 799\,\text{N·m} \text{ antihorario } \circlearrowleft\).</b></div>
+      </div>
+    </article>
+
+    <!-- E4 -->
+    <article class="ex">
+      <span class="tag">Ejemplo 4 · Viga simplemente apoyada</span>
+      <div class="ex-top">
+        <p class="q">Una viga de 8 m tiene un pasador en A (x = 0) y un rodillo en B (x = 8 m). Lleva una carga puntual de 10 kN en x = 2 m y una carga distribuida uniforme de 3 kN/m desde x = 4 m hasta x = 8 m. Halla las reacciones.</p>
+        <div class="fig"><svg viewBox="0 0 320 190" role="img" aria-label="Viga con carga puntual y distribuida">
+          <rect x="160" y="30" width="130" height="26" fill="none" class="ink" stroke-width="1.2"/>
+          <g class="f"><line x1="175" y1="30" x2="175" y2="56"/><line x1="200" y1="30" x2="200" y2="56"/><line x1="225" y1="30" x2="225" y2="56"/><line x1="250" y1="30" x2="250" y2="56"/><line x1="275" y1="30" x2="275" y2="56"/></g>
+          <text class="fl" x="190" y="22">3 kN/m</text>
+          <line class="f" x1="95" y1="18" x2="95" y2="60"/><polygon class="ff" points="95,64 89,52 101,52"/><text class="fl" x="102" y="28">10 kN</text>
+          <rect class="body" x="30" y="66" width="260" height="12"/>
+          <line class="r" x1="30" y1="150" x2="30" y2="86"/><polygon class="rf" points="30,82 24,94 36,94"/><text class="rl" x="36" y="140">Ay</text>
+          <line class="r" x1="2" y1="100" x2="22" y2="100"/><polygon class="rf" points="26,100 16,95 16,105"/><text class="rl" x="0" y="94">Ax</text>
+          <line class="r" x1="290" y1="150" x2="290" y2="86"/><polygon class="rf" points="290,82 284,94 296,94"/><text class="rl" x="252" y="140">By</text>
+          <text x="22" y="170">A</text><text x="284" y="170">B</text>
+          <line class="dimL" x1="30" y1="160" x2="95" y2="160"/><text class="dl" x="54" y="182">2 m</text>
+          <line class="dimL" x1="160" y1="160" x2="290" y2="160"/><text class="dl" x="212" y="182">4 m</text>
+          <text class="dl" x="112" y="182">2 m</text>
+        </svg></div>
+      </div>
+      <button class="reveal" type="button">Mostrar solución</button>
+      <div class="sol">
+        <div class="steps">
+          <div class="step"><div><b>Resultante de la carga distribuida</b><div class="formula">\(R = 3\,\text{kN/m} \cdot  4\,\text{m} = 12\,\text{kN} \text{ en } x = 4 + 2 = 6\,\text{m}\)</div></div></div>
+          <div class="step"><div><b>DCL</b><span>Pasador en A → Ax y Ay. Rodillo en B → By. Tres incógnitas: isostática.</span></div></div>
+          <div class="step"><div><b>\(\Sigma F_x = 0\)</b><div class="formula">\(A_x = 0\) <small>no hay cargas horizontales</small></div></div></div>
+          <div class="step"><div><b>\(\Sigma M_{A} = 0\)</b> (elimina Ax y Ay)<div class="formula">\(B_y\cdot 8 - 10\cdot 2 - 12\cdot 6 = 0 \;\rightarrow\; B_y = 92 / 8 = 11.5\,\text{kN}\)</div></div></div>
+          <div class="step"><div><b>\(\Sigma F_y = 0\)</b><div class="formula">\(A_y + 11.5 - 10 - 12 = 0 \;\rightarrow\; A_y = 10.5\,\text{kN}\)</div></div></div>
+          <div class="step"><div><b>Comprobación con ΣM_B</b><div class="formula">\(-10.5\cdot 8 + 10\cdot 6 + 12\cdot 2 = -84 + 60 + 24 = 0 \;\checkmark\)</div></div></div>
+        </div>
+        <div class="answer"><b>\(A_x = 0, A_y = 10.5\,\text{kN} \uparrow , B_y = 11.5\,\text{kN} \uparrow\).</b></div>
+      </div>
+    </article>
+
+    <!-- E5 -->
+    <article class="ex">
+      <span class="tag">Ejemplo 5 · Viga en voladizo (empotrada)</span>
+      <div class="ex-top">
+        <p class="q">Una viga de 3 m está empotrada en A. Lleva una carga uniforme de 2 kN/m en toda su longitud y, en el extremo libre B, una fuerza de 5 kN inclinada según un triángulo 3-4-5 (4 hacia abajo, 3 hacia la izquierda). Halla las reacciones en A.</p>
+        <div class="fig"><svg viewBox="0 0 320 180" role="img" aria-label="Viga en voladizo con carga distribuida y fuerza inclinada">
+          <line class="ink" x1="30" y1="30" x2="30" y2="140"/><line class="hatch" x1="30" y1="40" x2="18" y2="52"/><line class="hatch" x1="30" y1="70" x2="18" y2="82"/><line class="hatch" x1="30" y1="100" x2="18" y2="112"/><line class="hatch" x1="30" y1="128" x2="18" y2="140"/>
+          <rect x="30" y="50" width="240" height="22" fill="none" class="ink" stroke-width="1.2"/>
+          <g class="f"><line x1="60" y1="50" x2="60" y2="72"/><line x1="110" y1="50" x2="110" y2="72"/><line x1="160" y1="50" x2="160" y2="72"/><line x1="210" y1="50" x2="210" y2="72"/><line x1="255" y1="50" x2="255" y2="72"/></g>
+          <text class="fl" x="110" y="42">2 kN/m</text>
+          <rect class="body" x="30" y="80" width="240" height="12"/>
+          <line class="f" x1="300" y1="46" x2="273" y2="82"/><polygon class="ff" points="270,86 272,72 281,79"/><text class="fl" x="282" y="40">5 kN</text>
+          <text x="38" y="112">A</text><text x="258" y="112">B</text>
+          <line class="dimL" x1="30" y1="150" x2="270" y2="150"/><text class="dl" x="140" y="170">3 m</text>
+        </svg></div>
+      </div>
+      <button class="reveal" type="button">Mostrar solución</button>
+      <div class="sol">
+        <div class="steps">
+          <div class="step"><div><b>Resultante distribuida</b><div class="formula">\(R = 2\cdot 3 = 6\,\text{kN} \text{ en } x = 1.5\,\text{m}\)</div></div></div>
+          <div class="step"><div><b>Componentes de la fuerza en B</b><div class="formula">\(\text{ Horizontal } = 5\cdot (3/5) = 3\,\text{kN} \leftarrow \qquad \text{ Vertical } = 5\cdot (4/5) = 4\,\text{kN} \downarrow\)</div></div></div>
+          <div class="step"><div><b>DCL</b><span>Empotramiento → Ax, Ay y M_A. Tres incógnitas.</span></div></div>
+          <div class="step"><div><b>\(\Sigma F_x = 0\)</b><div class="formula">\(A_x - 3 = 0 \;\rightarrow\; A_x = 3\,\text{kN} \;\rightarrow\;\)</div></div></div>
+          <div class="step"><div><b>\(\Sigma F_y = 0\)</b><div class="formula">\(A_y - 6 - 4 = 0 \;\rightarrow\; A_y = 10\,\text{kN} \uparrow\)</div></div></div>
+          <div class="step"><div><b>\(\Sigma M_{A} = 0\)</b><span>La componente horizontal de 3 kN va por el eje de la viga y pasa por A: no hace momento.</span><div class="formula">\(M_{A} - 6\cdot 1.5 - 4\cdot 3 = 0 \;\rightarrow\; M_{A} = 21\,\text{kN·m}\)</div></div></div>
+        </div>
+        <div class="answer"><b>\(A_x = 3\,\text{kN} \;\rightarrow\;, A_y = 10\,\text{kN} \uparrow , M_{A} = 21\,\text{kN·m} \text{ antihorario } \circlearrowleft\).</b></div>
+      </div>
+    </article>
+
+    <!-- E6 -->
+    <article class="ex">
+      <span class="tag">Ejemplo 6 · Barra con cable (pluma)</span>
+      <div class="ex-top">
+        <p class="q">Una barra horizontal AB de 4 m y 200 N de peso está articulada a una pared en A. En B cuelga una carga de 600 N, y un cable va de B a la pared formando 30° con la barra. Halla la tensión del cable y las reacciones en A.</p>
+        <div class="fig"><svg viewBox="0 0 320 190" role="img" aria-label="Barra articulada en la pared sostenida por un cable">
+          <line class="ink" x1="30" y1="10" x2="30" y2="170"/><line class="hatch" x1="30" y1="20" x2="18" y2="32"/><line class="hatch" x1="30" y1="60" x2="18" y2="72"/><line class="hatch" x1="30" y1="100" x2="18" y2="112"/><line class="hatch" x1="30" y1="140" x2="18" y2="152"/>
+          <line class="ink" x1="270" y1="120" x2="30" y2="20" stroke-dasharray="5 4" stroke-width="1.4"/>
+          <rect class="body" x="30" y="114" width="240" height="12"/>
+          <circle class="inkf" cx="30" cy="120" r="4"/>
+          <line class="r" x1="270" y1="120" x2="205" y2="93"/><polygon class="rf" points="200,91 212,90 208,100"/><text class="rl" x="190" y="84">T</text>
+          <line class="f" x1="270" y1="126" x2="270" y2="172"/><polygon class="ff" points="270,178 264,166 276,166"/><text class="fl" x="278" y="172">600 N</text>
+          <line class="f" x1="150" y1="126" x2="150" y2="160"/><polygon class="ff" points="150,166 144,154 156,154"/><text class="fl" x="158" y="162">200 N</text>
+          <text x="40" y="142">A</text><text x="276" y="112">B</text><text class="dl" x="222" y="114">30°</text>
+        </svg></div>
+      </div>
+      <button class="reveal" type="button">Mostrar solución</button>
+      <div class="sol">
+        <div class="steps">
+          <div class="step"><div><b>DCL de la barra</b><span>Pasador en A → Ax, Ay. Cable en B → T dirigida hacia la pared y hacia arriba a 30°. Peso 200 N en el centro (2 m) y 600 N en B.</span></div></div>
+          <div class="step"><div><b>\(\Sigma M_{A} = 0\)</b><span>Solo la componente vertical de T (T·sen30°) hace momento; la horizontal pasa por la línea de A.</span><div class="formula">\(T\cdot \operatorname{sen} 30^\circ \cdot 4 - 200\cdot 2 - 600\cdot 4 = 0 \;\rightarrow\; 2T = 2800 \;\rightarrow\; T = 1400\,\text{N}\)</div></div></div>
+          <div class="step"><div><b>\(\Sigma F_x = 0\)</b><div class="formula">\(A_x - 1400\cdot \cos 30^\circ  = 0 \;\rightarrow\; A_x = 1212.4\,\text{N} (\text{ se aleja de la pared })\)</div></div></div>
+          <div class="step"><div><b>\(\Sigma F_y = 0\)</b><div class="formula">\(A_y + 1400\cdot \operatorname{sen} 30^\circ  - 200 - 600 = 0 \;\rightarrow\; A_y = 100\,\text{N} \uparrow\)</div></div></div>
+        </div>
+        <div class="answer"><b>\(T = 1400\,\text{N}, A_x = 1212.4\,\text{N}, A_y = 100\,\text{N} \uparrow\).</b> La tensión es mucho mayor que las cargas porque el cable es poco inclinado.</div>
+      </div>
+    </article>
+
+    <!-- E7 -->
+    <article class="ex">
+      <span class="tag">Ejemplo 7 · Plano inclinado con fricción</span>
+      <div class="ex-top">
+        <p class="q">Un bloque de 50 kg descansa en un plano inclinado a 25° con μs = 0.35. a) ¿Se desliza? b) ¿Qué fuerza P paralela al plano (hacia arriba) evita que baje? c) ¿Qué fuerza P lo pone a punto de subir?</p>
+        <div class="fig"><svg viewBox="0 0 300 190" role="img" aria-label="Bloque sobre plano inclinado con peso, normal y fricción">
+          <polygon points="20,170 280,170 280,49" fill="none" class="ink"/>
+          <g transform="rotate(-25 160 118)"><rect class="body" x="135" y="88" width="52" height="34"/></g>
+          <line class="f" x1="165" y1="108" x2="165" y2="175"/><polygon class="ff" points="165,181 159,169 171,169"/><text class="fl" x="138" y="186">W</text>
+          <line class="r" x1="165" y1="108" x2="140" y2="54"/><polygon class="rf" points="138,49 136,62 147,58"/><text class="rl" x="120" y="48">N</text>
+          <line class="r" x1="165" y1="108" x2="225" y2="80"/><polygon class="rf" points="230,78 218,78 222,88"/><text class="rl" x="228" y="70">f</text>
+          <text class="dl" x="56" y="164">25°</text>
+        </svg></div>
+      </div>
+      <button class="reveal" type="button">Mostrar solución</button>
+      <div class="sol">
+        <div class="steps">
+          <div class="step"><div><b>Peso</b><div class="formula">\(W = 50\cdot 9.81 = 490.5\,\text{N}\)</div></div></div>
+          <div class="step"><div><b>Ejes rotados (x paralelo al plano)</b><div class="formula">\(N = W\cdot \cos 25^\circ  = 444.5\,\text{N}\qquad W\parallel  = W\cdot \operatorname{sen} 25^\circ  = 207.3\,\text{N}\)</div></div></div>
+          <div class="step"><div><b>a) Compara fricción necesaria y máxima</b><div class="formula">\(f_{\text{necesaria}} = 207.3\,\text{N}\qquad f_{\text{m}\mathrm{\acute{a}}\text{x}} = 0.35\cdot 444.5 = 155.6\,\text{N}\)</div><span>207.3 &gt; 155.6 → <b>sí se desliza</b>. Comprobación rápida: tan25° = 0.466 &gt; 0.35.</span></div></div>
+          <div class="step"><div><b>b) Evitar que baje</b><span>A punto de bajar, la fricción apunta hacia arriba del plano y vale f_max.</span><div class="formula">\(P + 155.6 - 207.3 = 0 \;\rightarrow\; P = 51.7\,\text{N}\)</div></div></div>
+          <div class="step"><div><b>c) A punto de subir</b><span>Ahora la fricción cambia de sentido y apunta hacia abajo del plano.</span><div class="formula">\(P - 207.3 - 155.6 = 0 \;\rightarrow\; P = 362.9\,\text{N}\)</div></div></div>
+        </div>
+        <div class="answer"><b>\(a) \text{ Se desliza }. b) P = 51.7\,\text{N}. c) P = 362.9\,\text{N}\).</b> Entre 51.7 N y 362.9 N el bloque se queda quieto.</div>
+      </div>
+    </article>
+
+    <!-- E8 -->
+    <article class="ex">
+      <span class="tag">Ejemplo 8 · Armadura por el método de nodos</span>
+      <div class="ex-top">
+        <p class="q">Una armadura triangular tiene nodos A (pasador, en x = 0), B (rodillo, en x = 4 m) y C (arriba, en x = 2 m, y = 2 m). Una carga de 10 kN cuelga de C. Halla la fuerza en cada barra e indica si es tensión o compresión.</p>
+        <div class="fig"><svg viewBox="0 0 300 200" role="img" aria-label="Armadura triangular con carga en el vértice">
+          <polygon points="50,150 250,150 150,50" fill="none" class="ink" stroke-width="4" stroke-linejoin="round"/>
+          <circle class="body" cx="50" cy="150" r="5"/><circle class="body" cx="250" cy="150" r="5"/><circle class="body" cx="150" cy="50" r="5"/>
+          <line class="f" x1="150" y1="56" x2="150" y2="100"/><polygon class="ff" points="150,106 144,94 156,94"/><text class="fl" x="158" y="96">10 kN</text>
+          <line class="r" x1="50" y1="195" x2="50" y2="162"/><polygon class="rf" points="50,158 44,170 56,170"/><text class="rl" x="58" y="190">Ay</text>
+          <line class="r" x1="250" y1="195" x2="250" y2="162"/><polygon class="rf" points="250,158 244,170 256,170"/><text class="rl" x="214" y="190">By</text>
+          <text x="30" y="146">A</text><text x="258" y="146">B</text><text x="144" y="40">C</text><text class="dl" x="80" y="144">45°</text>
+        </svg></div>
+      </div>
+      <button class="reveal" type="button">Mostrar solución</button>
+      <div class="sol">
+        <div class="steps">
+          <div class="step"><div><b>Reacciones (armadura completa)</b><span>Por simetría, o con ΣM_A = 0: By·4 − 10·2 = 0.</span><div class="formula">\(B_y = 5\,\text{kN}\qquad A_y = 5\,\text{kN}\qquad A_x = 0\)</div></div></div>
+          <div class="step"><div><b>Nodo A</b> (2 incógnitas: F_AC y F_AB, ambas supuestas en tensión)<div class="formula">\(\Sigma F_y: 5 + F_{AC}\cdot \operatorname{sen} 45^\circ  = 0 \;\rightarrow\; F_{AC} = -7.07\,\text{kN}\)</div><div class="formula">\(\Sigma F_x: F_{AB} + F_{AC}\cdot \cos 45^\circ  = 0 \;\rightarrow\; F_{AB} = +5\,\text{kN}\)</div></div></div>
+          <div class="step"><div><b>Interpreta los signos</b><span>Negativo = compresión. Positivo = tensión. Por simetría, F_BC = F_AC.</span></div></div>
+        </div>
+        <div class="answer"><b>\(\text{ AC } = \text{ BC } = 7.07\,\text{kN} (C), \text{ AB } = 5\,\text{kN} (T)\).</b> Las barras inclinadas empujan y la de abajo se estira, como en un techo.</div>
+      </div>
+    </article>
+  </section>
+
+  <!-- BANCO DE EJERCICIOS -->
+  <section class="mod glass" id="ejercicios">
+    <div class="toolbar">
+      <div><span class="num" style="font:600 13px var(--mono);color:var(--accent);letter-spacing:.06em">BANCO DE PRÁCTICA</span><h2>50 ejercicios</h2></div>
+      <button class="btn-g" type="button" id="rnd">Dame uno al azar</button>
+    </div>
+    <p style="color:var(--muted);max-width:66ch">Resuélvelos en papel. Si te trabas, mira la pista primero y la solución después. Marca «Resuelto» para llevar la cuenta; se guarda en este navegador.</p>
+    <div class="bank-bar">
+      <div class="chips" id="f-tema" role="group" aria-label="Filtrar por tema"></div>
+      <div class="chips" id="f-nivel" role="group" aria-label="Filtrar por nivel"></div>
+      <div class="bank-stats"><span class="m" id="bank-count">0 de 50 resueltos</span><div class="bar"><i id="bank-bar"></i></div><button class="btn-g" type="button" id="hide-done" aria-pressed="false">Ocultar resueltos</button></div>
+    </div>
+    <div class="bank" id="bank"></div>
+  </section>
+
+  <!-- FORMULARIO -->
+  <section class="mod glass" id="formulario">
+    <div><span class="num" style="font:600 13px var(--mono);color:var(--accent);letter-spacing:.06em">REPASO FINAL</span><h2>Formulario de una página</h2></div>
+    <div class="grid3">
+      <div class="tile"><h4>Fuerzas</h4><div class="formula">\(F_x = F \cos  \theta\)<br>\(F_y = F \operatorname{sen}  \theta\)<br>\(R = \sqrt{\Sigma F_x^2 + \Sigma F_y^2}\)<br>\(\theta  = \tan^{-1}(\Sigma F_y/\Sigma F_x)\)</div></div>
+      <div class="tile"><h4>Equilibrio</h4><div class="formula">\(\text{ Part}\mathrm{\acute{\imath}}\text{cula }:\)<br>\(\Sigma F_x = 0, \Sigma F_y = 0\)<br>\(\text{ Cuerpo r}\mathrm{\acute{\imath}}\text{gido }:\)<br>\(+ \Sigma M = 0\)</div></div>
+      <div class="tile"><h4>Momento</h4><div class="formula">\(M = F\cdot d\perp\)<br>\(M = x\cdot F_y - y\cdot F_x\)<br>\(\circlearrowleft  +\qquad \circlearrowright  -\)</div></div>
+      <div class="tile"><h4>Cargas distribuidas</h4><div class="formula">\(\text{ Uniforme }: \text{ wL en } L/2\)<br>\(\text{ Triangular }: ½\text{ wL }\)<br>\(a L/3 \text{ del lado alto }\)</div></div>
+      <div class="tile"><h4>Fricción</h4><div class="formula">\(f \le  \mu_s\cdot N\)<br>\(f_{\text{m}\mathrm{\acute{a}}\text{x}} = \mu_s\cdot N\)<br>\(\tan  \theta _\text{ crit } = \mu_s\)</div></div>
+      <div class="tile"><h4>Apoyos</h4><div class="formula">\(\text{ Rodillo }: 1\)<br>\(\text{ Pasador }: 2\)<br>\(\text{ Empotrado }: 3\)<br>\(\text{ Cable }: 1 (T)\)</div></div>
+    </div>
+  </section>
+
+  <!-- VIDEOS -->
+  <section class="mod glass" id="videos">
+    <div><span class="num" style="font:600 13px var(--mono);color:var(--accent);letter-spacing:.06em">YOUTUBE</span><h2>Videos recomendados</h2></div>
+    <p style="color:var(--muted);max-width:66ch">Organizados en el mismo orden que la guía. Míralos a 1.25× o 1.5× y pausa antes de cada solución para intentarla tú.</p>
+
+    <div class="vgroup"><h3>Componentes y resultante</h3><div class="vids">
+      <a class="vid" href="https://www.youtube.com/watch?v=OXDrRFg9Z4I" target="_blank" rel="noopener"><span class="t">Curso · Clase 7</span><h4>Suma de fuerzas por componentes rectangulares</h4><p>Parte de un curso de estática completo, muy ordenado.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=sNViXvtFGII" target="_blank" rel="noopener"><span class="t">Fundamentos</span><h4>Descomposición de una fuerza en sus componentes rectangulares</h4><p>Desde cero, ideal si nunca has descompuesto vectores.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=ObUnOINK6CI" target="_blank" rel="noopener"><span class="t">Ejercicio</span><h4>Cómo calcular la fuerza resultante con componentes</h4><p>Igual al ejemplo 1 de esta guía.</p></a>
+    </div></div>
+
+    <div class="vgroup"><h3>Equilibrio de partícula y DCL</h3><div class="vids">
+      <a class="vid" href="https://www.youtube.com/watch?v=PYgOu2j33as" target="_blank" rel="noopener"><span class="t">Curso · Clase 9</span><h4>Equilibrio de una partícula</h4><p>Continúa el mismo curso: cables, nudos y tensiones.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=aMDm5Hmr2Og" target="_blank" rel="noopener"><span class="t">Ejemplos</span><h4>Diagrama de cuerpo libre y equilibrio de fuerzas</h4><p>Varios DCL resueltos uno tras otro.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=-g60udVKa6E" target="_blank" rel="noopener"><span class="t">Cuerpo rígido</span><h4>Equilibrio de cuerpos rígidos, DCL y reacciones en soportes</h4><p>Cómo reemplazar cada apoyo por sus reacciones.</p></a>
+    </div></div>
+
+    <div class="vgroup"><h3>Momento de una fuerza</h3><div class="vids">
+      <a class="vid" href="https://www.youtube.com/watch?v=yo1BlPgmK8I" target="_blank" rel="noopener"><span class="t">Teoría</span><h4>Torque o momento de una fuerza: explicación</h4><p>El concepto antes de los ejercicios.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=UO0oCC3drDg" target="_blank" rel="noopener"><span class="t">Ejercicios</span><h4>Cálculo de momentos. Estática para ingeniería</h4><p>Momentos en 2D con componentes y Varignon.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=L0gO9nsKGqs" target="_blank" rel="noopener"><span class="t">Beer · 3-1</span><h4>Aplicación a momentos 2D, ejercicio del libro de Beer</h4><p>Útil si tu curso usa Beer &amp; Johnston.</p></a>
+    </div></div>
+
+    <div class="vgroup"><h3>Reacciones en vigas y cargas distribuidas</h3><div class="vids">
+      <a class="vid" href="https://www.youtube.com/watch?v=liuyKEAqP_k" target="_blank" rel="noopener"><span class="t">Básico</span><h4>Calcular las reacciones en una viga simplemente apoyada</h4><p>El caso del ejemplo 4.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=WUjSL7JTZ2w" target="_blank" rel="noopener"><span class="t">Teoría</span><h4>Cargas distribuidas en vigas: resultante y ubicación</h4><p>Rectangulares, triangulares y trapezoidales.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=ngSJd-aT4cg" target="_blank" rel="noopener"><span class="t">Ejercicio</span><h4>Viga con carga distribuida y puntual: reacciones</h4><p>Combina ambas cargas, típico de examen.</p></a>
+    </div></div>
+
+    <div class="vgroup"><h3>Fricción y plano inclinado</h3><div class="vids">
+      <a class="vid" href="https://www.youtube.com/watch?v=WY1rjM5Wtz0" target="_blank" rel="noopener"><span class="t">Ejercicio</span><h4>Ejercicio de fricción en plano inclinado</h4><p>Ejes rotados, normal y fricción máxima.</p></a>
+      <a class="vid" href="https://www.youtube.com/watch?v=P4eeBsel0Tw" target="_blank" rel="noopener"><span class="t">Estática</span><h4>Sistema en equilibrio en plano inclinado sin rozamiento</h4><p>Para dominar las componentes del peso primero.</p></a>
+      <a class="vid" href="https://www.youtube.com/playlist?list=PLfm_CVo75zLYZ0lcvXsvqufIZvkmEIDFb" target="_blank" rel="noopener"><span class="t">Lista · Hibbeler</span><h4>Cap. 3: Equilibrio de una partícula (Hibbeler 14)</h4><p>Lista de ejercicios del libro, para practicar más.</p></a>
+    </div></div>
+  </section>
+
+  <!-- EXAMEN -->
+  <section class="mod glass" id="examen">
+    <div><span class="num" style="font:600 13px var(--mono);color:var(--accent);letter-spacing:.06em">EL DÍA DEL EXAMEN</span><h2>Lista de chequeo</h2></div>
+    <div class="grid2">
+      <div class="tile"><h4>En cada problema</h4>
+        <ul class="clean">
+          <li>Dibuja el DCL aunque no lo pidan. Suele dar puntos.</li>
+          <li>Escribe la convención de signos (↺+) al inicio.</li>
+          <li>Convierte kg a N y todo a las mismas unidades.</li>
+          <li>Toma momentos donde haya más incógnitas.</li>
+          <li>Comprueba con una ecuación extra.</li>
+          <li>Da cada respuesta con unidades y sentido (↑, →, T o C).</li>
+        </ul>
+      </div>
+      <div class="tile"><h4>Señales de que algo está mal</h4>
+        <ul class="clean">
+          <li>Una tensión de cable negativa.</li>
+          <li>Una normal negativa (el cuerpo se despegó).</li>
+          <li>Un momento en un pasador o rodillo.</li>
+          <li>Más de 3 incógnitas en un cuerpo 2D.</li>
+          <li>La calculadora en radianes en vez de grados.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <span class="credit">Hecho por <strong>José Luciano Mejía Arias</strong> · v1.0.0</span>
+  <div class="socials">
+    <a href="https://instagram.com/lucianomejia17" target="_blank" rel="noopener">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      Instagram
+    </a>
+    <a href="https://github.com/LucianoMejia" target="_blank" rel="noopener">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5 0-.24-.01-1.05-.01-1.9-2.78.62-3.37-1.22-3.37-1.22-.46-1.2-1.11-1.53-1.11-1.53-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.9 1.56 2.36 1.11 2.93.85.09-.67.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .28.18.6.69.5A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg>
+      GitHub
+    </a>
+    <a href="https://www.linkedin.com/in/jos%C3%A9-luciano-mej%C3%ADa-arias-a35806383/" target="_blank" rel="noopener">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 8.5H3.56V20.5H6.94V8.5Z"/><path d="M5.25 3.5A1.94 1.94 0 1 0 5.25 7.38 1.94 1.94 0 0 0 5.25 3.5Z"/><path d="M20.5 20.5H17.13v-6.3c0-1.5-.03-3.44-2.1-3.44-2.1 0-2.42 1.64-2.42 3.33v6.41H9.23V8.5h3.24v1.64h.05c.45-.85 1.55-1.75 3.2-1.75 3.42 0 4.06 2.25 4.06 5.18v6.93Z"/></svg>
+      LinkedIn
+    </a>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const KEY = 'estatica-progreso-v1';
+  const boxes = [...document.querySelectorAll('input[data-mod]')];
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  boxes.forEach(b => { b.checked = !!saved[b.dataset.mod]; b.addEventListener('change', update); });
+  function update() {
+    const state = {};
+    boxes.forEach(b => state[b.dataset.mod] = b.checked);
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+    const n = boxes.filter(b => b.checked).length;
+    document.getElementById('progtxt').textContent = n + '/' + boxes.length;
+    document.getElementById('ring').style.strokeDashoffset = 62.83 * (1 - n / boxes.length);
+    document.querySelectorAll('#route a').forEach(a => {
+      const id = a.getAttribute('href').slice(1);
+      a.classList.toggle('done', !!state[id]);
+    });
+  }
+  update();
+
+  /* Modo práctica */
+  const bS = document.getElementById('b-study'), bP = document.getElementById('b-practice');
+  function setPractice(on) {
+    document.body.classList.toggle('practice', on);
+    bS.setAttribute('aria-pressed', !on); bP.setAttribute('aria-pressed', on);
+    if (on) document.querySelectorAll('.ex.shown').forEach(e => e.classList.remove('shown'));
+  }
+  bS.onclick = () => setPractice(false);
+  bP.onclick = () => setPractice(true);
+  document.querySelectorAll('.reveal').forEach(btn => btn.onclick = () => btn.closest('.ex').classList.add('shown'));
+
+  /* Sección activa en la barra */
+  const links = [...document.querySelectorAll('#links a')];
+  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        links.forEach(l => l.classList.remove('on'));
+        const a = map.get(en.target.id);
+        if (a) {
+          a.classList.add('on');
+          const box = document.getElementById('links');
+          const target = a.offsetLeft - (box.clientWidth - a.offsetWidth) / 2;
+          box.scrollTo({ left: Math.max(0, target), behavior: 'auto' });
+        }
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  map.forEach((a, id) => { const s = document.getElementById(id); if (s) io.observe(s); });
+})();
+</script>
+
+<script>
+/* ===== Dibujos de los ejercicios (generados) ===== */
+const FIG = (() => {
+  const R = v => Math.round(v * 10) / 10;
+  const svg = (inner, h = 210, w = 340) => `<svg viewBox="0 0 ${w} ${h}" role="img">${inner}</svg>`;
+  const T = (x, y, s, c = '') => `<text class="lab ${c}" x="${R(x)}" y="${R(y)}">${s}</text>`;
+  const line = (x1, y1, x2, y2, c = 'ink', extra = '') => `<line class="${c}" x1="${R(x1)}" y1="${R(y1)}" x2="${R(x2)}" y2="${R(y2)}" ${extra}/>`;
+  function arr(x1, y1, x2, y2, c = 'f', lab = '', at = 'head', off = [0, 0]) {
+    const a = Math.atan2(y2 - y1, x2 - x1), h = 10, w = 4.5;
+    const bx = x2 - h * Math.cos(a), by = y2 - h * Math.sin(a), px = -Math.sin(a) * w, py = Math.cos(a) * w;
+    let s = line(x1, y1, bx, by, c) + `<polygon class="${c}f" points="${R(x2)},${R(y2)} ${R(bx + px)},${R(by + py)} ${R(bx - px)},${R(by - py)}"/>`;
+    if (lab) {
+      const ux = Math.cos(a), uy = Math.sin(a);
+      const [lx, ly] = at === 'head' ? [x2 + ux * 14, y2 + uy * 14] : [x1 - ux * 14, y1 - uy * 14];
+      s += T(lx + off[0], ly + off[1], lab, c + 'l');
+    }
+    return s;
+  }
+  // flecha polar: ang en grados (0 = derecha, 90 = arriba). into = la punta llega a (x,y)
+  function pol(x, y, ang, len, c = 'f', lab = '', into = false, off = [0, 0]) {
+    const dx = Math.cos(ang * Math.PI / 180), dy = -Math.sin(ang * Math.PI / 180);
+    return into ? arr(x - dx * len, y - dy * len, x, y, c, lab, 'tail', off) : arr(x, y, x + dx * len, y + dy * len, c, lab, 'head', off);
+  }
+  const hatchG = (x1, x2, y) => { let s = line(x1, y, x2, y); for (let x = x1 + 5; x <= x2; x += 8) s += line(x, y, x - 6, y + 7, 'hatch'); return s; };
+  const hatchC = (x1, x2, y) => { let s = line(x1, y, x2, y); for (let x = x1 + 5; x <= x2; x += 8) s += line(x, y, x - 6, y - 7, 'hatch'); return s; };
+  const wallL = (x, y1, y2) => { let s = line(x, y1, x, y2); for (let y = y1 + 5; y <= y2; y += 9) s += line(x, y, x - 7, y + 6, 'hatch'); return s; };
+  const wallR = (x, y1, y2) => { let s = line(x, y1, x, y2); for (let y = y1 + 5; y <= y2; y += 9) s += line(x, y, x + 7, y + 6, 'hatch'); return s; };
+  const pin = (x, y) => `<polygon class="body" points="${x},${y} ${x - 11},${y + 18} ${x + 11},${y + 18}"/><circle class="inkf" cx="${x}" cy="${y}" r="2.5"/>` + hatchG(x - 16, x + 16, y + 18);
+  const roller = (x, y) => `<polygon class="body" points="${x},${y} ${x - 10},${y + 12} ${x + 10},${y + 12}"/><circle class="ink" cx="${x - 5}" cy="${y + 16}" r="3.5" stroke-width="1.5"/><circle class="ink" cx="${x + 5}" cy="${y + 16}" r="3.5" stroke-width="1.5"/>` + hatchG(x - 16, x + 16, y + 20);
+  function couple(x, y, dir, c, lab, r = 17) {
+    const ccw = dir === 'ccw';
+    const a0 = ccw ? -40 : 220, a1 = ccw ? 220 : -40;
+    const P = a => [x + r * Math.cos(a * Math.PI / 180), y - r * Math.sin(a * Math.PI / 180)];
+    const [sx, sy] = P(a0), [ex, ey] = P(a1);
+    let s = `<path class="${c}" d="M${R(sx)} ${R(sy)} A${r} ${r} 0 1 ${ccw ? 0 : 1} ${R(ex)} ${R(ey)}"/>`;
+    const tan = ccw ? a1 + 90 : a1 - 90, td = tan * Math.PI / 180;
+    const hx = ex + Math.cos(td) * 2, hy = ey - Math.sin(td) * 2;
+    s += arr(ex - Math.cos(td) * 8, ey + Math.sin(td) * 8, hx, hy, c);
+    if (lab) s += T(x, y - r - 12, lab, c + 'l');
+    return s;
+  }
+  const dim = (x1, x2, y, lab) => line(x1, y, x2, y, 'dimL') + line(x1, y - 5, x1, y + 5, 'dimL') + line(x2, y - 5, x2, y + 5, 'dimL') + T((x1 + x2) / 2, y + 12, lab, 'dl');
+  const box = (x, y, w, h, lab) => `<rect class="body" x="${x}" y="${y}" width="${w}" height="${h}" rx="3"/>` + (lab ? T(x + w / 2, y + h / 2, lab) : '');
+
+  /* ---------- Vigas y barras ---------- */
+  function beam(c, mode) {
+    const L = c.L, x0 = c.x0 ?? 66, x1 = c.x1 ?? 292, y = c.y ?? 95, H = c.h ?? 210;
+    const X = v => x0 + (v / L) * (x1 - x0);
+    const dcl = mode === 'd';
+    let s = '';
+    const Wl = dcl && c.Wd ? c.Wd : (c.W || []);
+    const wmax = Math.max(1, ...(c.W || []).map(w => Math.max(w.w1, w.w2)));
+    if (!dcl) {
+      (c.sup || []).forEach(p => {
+        if (p.t === 'fixed') s += wallL(X(p.x), y - 34, y + 34);
+        if (p.t === 'wallpin') s += wallL(X(p.x), y - (c.wallTop ?? 40), y + 30);
+      });
+    }
+    s += `<rect class="body" x="${R(x0)}" y="${y - 6}" width="${R(x1 - x0)}" height="12" rx="2"/>`;
+    // cargas distribuidas
+    (c.W || []).forEach(w => {
+      const h1 = 10 + w.w1 / wmax * 30, h2 = 10 + w.w2 / wmax * 30, a = X(w.x1), b = X(w.x2), top = y - 8;
+      const cls = dcl ? 'g' : 'f';
+      s += `<polygon points="${R(a)},${top} ${R(a)},${R(top - (w.w1 ? h1 : 0))} ${R(b)},${R(top - (w.w2 ? h2 : 0))} ${R(b)},${top}" fill="none" class="${dcl ? 'dimL' : 'ink'}" stroke-width="1.2"/>`;
+      const n = Math.max(2, Math.round((b - a) / 22));
+      for (let i = 0; i <= n; i++) {
+        const xx = a + (b - a) * i / n, ww = w.w1 + (w.w2 - w.w1) * i / n;
+        if (ww <= 0.001) continue;
+        const hh = 10 + ww / wmax * 30;
+        s += arr(xx, top - hh, xx, top, cls);
+      }
+      if (!dcl) s += T((a + b) / 2, top - Math.max(h1, h2) - 12, w.lab, 'fl');
+    });
+    if (dcl) Wl.forEach(w => {
+      const Rv = (w.w1 + w.w2) / 2 * (w.x2 - w.x1);
+      const xc = w.x1 + (w.x2 - w.x1) * (w.w1 + 2 * w.w2) / (3 * (w.w1 + w.w2));
+      s += pol(X(xc), y - 6, -90, 62, 'f', 'R = ' + R(Rv) + ' ' + (w.u || 'kN'), true, w.o || [0, -2]);
+      s += line(X(xc), y + 8, X(xc), y + 46, 'dimL');
+    });
+    // cargas puntuales
+    (c.P || []).forEach(p => {
+      const up = Math.sin(p.ang * Math.PI / 180) > 0.01;
+      const len = p.len || 46;
+      if (up) s += pol(X(p.x), y - 6, p.ang, len, p.c || 'f', p.lab, false, p.off || [0, 0]);
+      else s += pol(X(p.x), y - 6, p.ang, len, p.c || 'f', p.lab, true, p.off || [0, 0]);
+      if (dcl && c.comp && Math.abs(Math.cos(p.ang * Math.PI / 180)) > 0.05 && Math.abs(Math.sin(p.ang * Math.PI / 180)) > 0.05) {
+        const ca = Math.cos(p.ang * Math.PI / 180), sa = Math.sin(p.ang * Math.PI / 180);
+        const vx = X(p.x);
+        if (up) { s += pol(vx, y - 6, 90, 40 * sa, 'rd', p.cy || 'Fy', false, [14, 0]); s += pol(vx, y - 6, ca > 0 ? 0 : 180, 40 * Math.abs(ca), 'rd', p.cx || 'Fx', false, [0, 10]); }
+        else { s += pol(vx, y - 6, -90, 40 * Math.abs(sa), 'rd', p.cy || 'Fy', true, [16, 0]); s += pol(vx, y - 6, ca > 0 ? 0 : 180, 40 * Math.abs(ca), 'rd', p.cx || 'Fx', true, [0, -10]); }
+      }
+    });
+    (c.C || []).forEach(m => s += couple(X(m.x), y, m.dir, 'f', m.lab, 15));
+    // cable
+    if (c.cable) {
+      const bx = X(c.cable.x), ang = c.cable.ang, ht = (bx - x0) * Math.tan(ang * Math.PI / 180);
+      if (!dcl) { s += line(bx, y, x0, y - ht, 'ink', 'stroke-dasharray="5 4" stroke-width="1.4"'); s += T(bx - 34, y - 12, ang + '°', 'dl'); }
+      else { s += pol(bx, y, 180 - ang, 62, 'r', 'T'); s += line(bx, y, bx - 40, y, 'dimL'); s += T(bx - 42, y - 10, ang + '°', 'dl'); }
+    }
+    // apoyos / reacciones
+    (c.sup || []).forEach(p => {
+      const xx = X(p.x), n = p.n || '';
+      if (!dcl) {
+        if (p.t === 'pin') s += pin(xx, y + 6);
+        if (p.t === 'roller') s += roller(xx, y + 6);
+        if (p.t === 'wallpin') s += `<circle class="body" cx="${xx}" cy="${y}" r="5"/>`;
+        if (p.t === 'pivot') s += `<polygon class="body" points="${xx},${y + 6} ${xx - 11},${y + 26} ${xx + 11},${y + 26}"/>`;
+        if (p.t === 'point') s += `<circle class="inkf" cx="${xx}" cy="${y}" r="4.5"/>`;
+        if (n) s += T(xx + (p.t === 'fixed' ? 14 : 0), y + (p.t === 'fixed' ? 22 : 40), n);
+      } else {
+        const side = xx < (x0 + x1) / 2 ? -1 : 1;
+        if (p.t === 'pin' || p.t === 'wallpin') {
+          s += pol(xx, y + 6, 90, 40, 'r', n + 'y', true);
+          s += side < 0 ? pol(xx - 6, y, 0, 34, 'r', n + 'x', true) : pol(xx + 6, y, 180, 34, 'r', n + 'x', true);
+        }
+        if (p.t === 'roller' || p.t === 'pivot') s += pol(xx, y + 6, 90, 40, 'r', p.rn || (n + 'y'), true);
+        if (p.t === 'fixed') {
+          s += pol(xx, y + 6, 90, 40, 'r', n + 'y', true, [10, 0]);
+          s += pol(xx - 6, y, 0, 34, 'r', n + 'x', true);
+          s += couple(xx, y, 'ccw', 'r', 'M' + n, 22);
+        }
+        if (p.t === 'point') { s += `<circle class="inkf" cx="${xx}" cy="${y}" r="4"/>` + T(xx, y + 22, n); }
+      }
+    });
+    if (dcl && c.Mres) s += couple(X(c.Mres.x ?? 0), y, c.Mres.dir, 'r', c.Mres.lab, 24);
+    (c.D || []).forEach(d => s += dim(X(d[0]), X(d[1]), y + (dcl ? 62 : 54), d[2]));
+    return svg(s, H);
+  }
+
+  /* ---------- Vectores ---------- */
+  function vec(c, mode) {
+    const cx = c.cx ?? 170, cy = c.cy ?? 110, sc = c.sc ?? (82 / Math.max(...c.F.map(f => f.F)));
+    let s = line(cx - 140, cy, cx + 140, cy, 'dimL') + line(cx, cy + 92, cx, cy - 98, 'dimL') + T(cx + 132, cy + 12, 'x', 'dl') + T(cx + 10, cy - 92, 'y', 'dl');
+    const d = mode === 'd';
+    c.F.forEach(f => {
+      if (c.comps && d) {
+        const fx = f.F * Math.cos(f.a * Math.PI / 180) * sc, fy = f.F * Math.sin(f.a * Math.PI / 180) * sc;
+        s += arr(cx, cy, cx + fx, cy, 'rd', 'Fx', 'head', [0, 14 * Math.sign(-fy || 1) * -1]);
+        s += arr(cx + fx, cy, cx + fx, cy - fy, 'rd', 'Fy', 'head', [fx > 0 ? 16 : -16, 0]);
+        s += pol(cx, cy, f.a, f.F * sc, 'g', '');
+      } else s += pol(cx, cy, f.a, f.F * sc, d && !c.keep ? 'g' : 'f', f.l, false, f.o || [0, 0]);
+    });
+    if (d && c.Rv) {
+      const r = c.Rv, x = r.x * sc, y = r.y * sc;
+      if (r.show !== false) { s += arr(cx, cy, cx + x, cy, 'rd', 'ΣFx', 'head', [0, 12]); s += arr(cx + x, cy, cx + x, cy - y, 'rd', 'ΣFy', 'head', [x >= 0 ? 20 : -20, 0]); }
+      s += arr(cx, cy, cx + x, cy - y, 'r', r.l, 'head', r.o || [0, 0]);
+    }
+    if (c.extra) s += c.extra(mode, cx, cy, sc);
+    return svg(s, 220);
+  }
+
+  /* ---------- Nudo con cables ---------- */
+  function knot(c, mode) {
+    const cx = 170, cy = 112, top = 26;
+    let s = '';
+    const d = mode === 'd';
+    if (!d) {
+      s += hatchC(40, 300, top);
+      c.k.forEach(k => {
+        const a = k.a * Math.PI / 180, dx = Math.cos(a), dy = -Math.sin(a);
+        if (Math.abs(dy) < 0.05) { const ex = dx > 0 ? 300 : 40; s += line(cx, cy, ex, cy, 'ink', 'stroke-width="1.6"') + (dx > 0 ? wallR(ex, cy - 30, cy + 30) : wallL(ex, cy - 30, cy + 30)); }
+        else { const t = (top - cy) / dy; s += line(cx, cy, cx + dx * t, top, 'ink', 'stroke-width="1.6"'); }
+        s += T(cx + Math.cos(a) * 46 + (dx < 0 ? -2 : 2), cy - Math.sin(a) * 46 + 14, k.g, 'dl');
+      });
+      s += line(cx, cy, cx, cy + 40, 'ink', 'stroke-width="1.6"') + box(cx - 30, cy + 40, 60, 30, c.W);
+      s += `<circle class="inkf" cx="${cx}" cy="${cy}" r="3.5"/>`;
+    } else {
+      s += line(cx - 90, cy, cx + 90, cy, 'dimL');
+      c.k.forEach(k => { s += pol(cx, cy, k.a, 70, 'r', k.T); s += T(cx + Math.cos(k.a * Math.PI / 180) * 34 + (Math.cos(k.a * Math.PI / 180) < 0 ? -6 : 6), cy - Math.sin(k.a * Math.PI / 180) * 34 + 14, k.g, 'dl'); });
+      s += pol(cx, cy, -90, 66, 'f', c.W);
+      s += `<circle class="inkf" cx="${cx}" cy="${cy}" r="4"/>`;
+    }
+    return svg(s, 210);
+  }
+
+  /* ---------- Plano inclinado ---------- */
+  function incl(c, mode) {
+    const th = c.th, t = th * Math.PI / 180, x0 = 50, base = 220, yb = 185;
+    const yt = yb - base * Math.tan(t);
+    const sp = 0.52, px = x0 + base * sp, py = yb - base * sp * Math.tan(t);
+    const nx = -Math.sin(t), ny = Math.cos(t);
+    const bx = px + nx * 17, by = py - ny * 17;
+    const d = mode === 'd';
+    let s = '';
+    if (!d) {
+      s += `<polygon class="ink" points="${x0},${yb} ${x0 + base},${yb} ${x0 + base},${R(yt)}" stroke-width="1.6"/>` + hatchG(x0 - 6, x0 + base + 8, yb);
+      s += T(x0 + 42, yb - 10, th + '°', 'dl');
+      s += `<g transform="rotate(${-th} ${R(bx)} ${R(by)})">` + box(R(bx - 20), R(by - 16), 40, 32, '') + `</g>` + T(bx, by, c.m);
+      if (c.mu) s += T(x0 + base - 50, yb + 16, c.mu, 'dl');
+      if (c.P === 'par') s += pol(bx + Math.cos(t) * 22, by - Math.sin(t) * 22, th, 54, 'f', c.Pl || 'P');
+      if (c.P === 'hor') s += pol(bx - 22, by, 0, 52, 'f', c.Pl || 'P', true);
+      if (c.pul) {
+        const tx = x0 + base + 6, ty = yt - 6;
+        s += line(bx + Math.cos(t) * 20, by - Math.sin(t) * 20, tx - Math.sin(t) * 0 - 4, ty - 4, 'ink', 'stroke-width="1.4"');
+        s += `<circle class="body" cx="${tx}" cy="${R(ty + 4)}" r="9"/>` + line(tx + 9, ty + 4, tx + 9, ty + 70, 'ink', 'stroke-width="1.4"') + box(tx - 6, ty + 70, 30, 26, 'm');
+      }
+    } else {
+      s += line(bx - Math.cos(t) * 90, by + Math.sin(t) * 90, bx + Math.cos(t) * 90, by - Math.sin(t) * 90, 'dimL') + line(bx - nx * 70, by + ny * 70, bx + nx * 80, by - ny * 80, 'dimL');
+      s += T(bx + Math.cos(t) * 100, by - Math.sin(t) * 100, "x'", 'dl') + T(bx + nx * 92, by - ny * 92, "y'", 'dl');
+      s += `<g transform="rotate(${-th} ${R(bx)} ${R(by)})">` + box(R(bx - 20), R(by - 16), 40, 32, '') + `</g>`;
+      s += pol(bx, by, -90, 62, 'f', 'W', false, [10, 0]);
+      s += pol(bx, by, 90 + th, 58, 'r', 'N');
+      if (c.f) s += pol(bx, by, c.f === 'up' ? th : 180 + th, 52, 'r', 'f');
+      if (c.P === 'par') s += pol(bx, by, th, 58, 'f', 'P');
+      if (c.P === 'hor') s += pol(bx - 20, by, 0, 50, 'f', 'P', true);
+      if (c.pul) s += pol(bx, by, th, 58, 'r', 'T');
+      s += T(bx - 52, by + 44, 'θ = ' + th + '°', 'dl');
+    }
+    return svg(s, 215);
+  }
+
+  /* ---------- Bloque sobre el piso ---------- */
+  function floorB(c, mode) {
+    const x0 = 125, w = 80, yb = 160, h = 50, cx = x0 + w / 2, cy = yb - h / 2;
+    const d = mode === 'd';
+    let s = '';
+    if (!d) {
+      s += hatchG(40, 300, yb) + box(x0, yb - h, w, h, c.m);
+      if (c.mu) s += T(270, yb + 18, c.mu, 'dl');
+      if (c.push) s += pol(x0, cy, 0, 56, 'f', c.Pl, true);
+      else { s += line(x0 + w, cy, x0 + w + Math.cos(c.a * Math.PI / 180) * 30, cy - Math.sin(c.a * Math.PI / 180) * 30, 'ink'); s += pol(x0 + w + Math.cos(c.a * Math.PI / 180) * 30, cy - Math.sin(c.a * Math.PI / 180) * 30, c.a, 50, 'f', c.Pl); if (c.a) s += T(x0 + w + 64, cy + 4, c.a + '°', 'dl'); }
+    } else {
+      s += box(x0, yb - h, w, h, '');
+      s += pol(cx, cy, -90, 70, 'f', 'W', false, [12, 0]);
+      s += pol(cx - 22, yb, 90, 44, 'r', 'N', true);
+      s += pol(x0 + 4, yb, 180, 46, 'r', 'f');
+      if (c.push) s += pol(x0, cy, 0, 56, 'f', 'P', true);
+      else s += pol(x0 + w, cy, c.a, 60, 'f', 'P');
+    }
+    return svg(s, 210);
+  }
+
+  /* ---------- Armadura triangular ---------- */
+  function tri(c, mode) {
+    const sp = c.span, hh = c.h;
+    const d = mode === 'd';
+    const sc = Math.min((d ? 150 : 180) / sp, 110 / hh);
+    const ax = d ? 30 : 80, ay = d ? 150 : 150, bx = ax + sp * sc, cxp = ax + sp * sc / 2, cyp = ay - hh * sc;
+    let s = `<polygon points="${R(ax)},${ay} ${R(bx)},${ay} ${R(cxp)},${R(cyp)}" fill="none" class="ink" stroke-width="${d ? 3 : 4}" stroke-linejoin="round"/>`;
+    [[ax, ay], [bx, ay], [cxp, cyp]].forEach(([x, y]) => s += `<circle class="body" cx="${R(x)}" cy="${R(y)}" r="4.5"/>`);
+    s += T(ax - 12, ay - 10, 'A') + T(bx + 12, ay - 10, 'B') + T(cxp, cyp - 14, 'C');
+    if (!d) {
+      s += pin(ax, ay + 5) + roller(bx, ay + 5);
+      s += pol(cxp, cyp + 4, -90, 38, 'f', c.P, false, [26, -10]);
+      s += dim(ax, bx, ay + 40, sp + ' m') + line(bx + 26, ay, bx + 26, cyp, 'dimL') + T(bx + 40, (ay + cyp) / 2, hh + ' m', 'dl');
+    } else {
+      s += pol(cxp, cyp, -90, 32, 'f', c.P, false, [24, -6]);
+      s += pol(ax, ay + 5, 90, 34, 'r', 'Ay', true) + pol(bx, ay + 5, 90, 34, 'r', 'By', true);
+      // nodo A aislado
+      const nx = 232, ny = 150, ang = Math.atan2(hh, sp / 2) * 180 / Math.PI;
+      s += line(nx, ny, nx + 40, ny, 'ink', 'stroke-width="3"') + line(nx, ny, nx + 40 * Math.cos(ang * Math.PI / 180), ny - 40 * Math.sin(ang * Math.PI / 180), 'ink', 'stroke-width="3"');
+      s += `<circle class="body" cx="${nx}" cy="${ny}" r="5"/>` + T(nx - 14, ny - 8, 'A');
+      s += pol(nx + 44, ny, 0, 26, 'r', 'F_AB', false, [-20, 14]);
+      s += pol(nx + 44 * Math.cos(ang * Math.PI / 180), ny - 44 * Math.sin(ang * Math.PI / 180), ang, 26, 'r', 'F_AC', false, [-6, 0]);
+      s += pol(nx, ny + 5, 90, 34, 'r', 'Ay', true);
+      s += T(nx + 20, 30, 'Nodo A', 'dl') + line(205, 20, 205, 195, 'dimL');
+    }
+    return svg(s, 215);
+  }
+
+  /* ---------- Casos especiales ---------- */
+  const special = {
+    spring(mode) {
+      let s = '';
+      if (mode !== 'd') {
+        s += hatchC(110, 230, 26);
+        let p = 'M170 26 L170 40'; for (let i = 0; i < 8; i++) p += ` L${i % 2 ? 158 : 182} ${46 + i * 8}`; p += ' L170 110 L170 120';
+        s += `<path class="ink" d="${p}" stroke-width="1.6"/>` + box(140, 120, 60, 36, '150 N') + T(220, 76, 'k = 2000 N/m', 'dl');
+      } else {
+        s += box(140, 90, 60, 36, '') + pol(170, 90, 90, 56, 'r', 'F = k·s') + pol(170, 126, -90, 56, 'f', '150 N');
+      }
+      return svg(s, 210);
+    },
+    ladder(mode) {
+      const fx = 205, fy = 180, tx = 280, ty = 50;
+      let s = '';
+      if (mode !== 'd') {
+        s += hatchG(60, 290, fy) + wallR(tx, 30, fy);
+        s += line(fx, fy, tx, ty, 'ink', 'stroke-width="6" stroke-linecap="round"');
+        s += pol((fx + tx) / 2, (fy + ty) / 2, -90, 46, 'f', '200 N', false, [-26, 0]);
+        s += T(fx - 28, fy - 12, '60°', 'dl') + T(fx - 60, 70, '5 m', 'dl') + T(170, 196, 'piso rugoso', 'dl') + T(tx + 26, 22, 'pared lisa', 'dl');
+      } else {
+        s += line(fx, fy, tx, ty, 'ink', 'stroke-width="6" stroke-linecap="round"');
+        s += pol((fx + tx) / 2, (fy + ty) / 2, -90, 50, 'f', 'W', false, [12, 0]);
+        s += pol(tx, ty, 180, 56, 'r', 'N_pared');
+        s += pol(fx, fy, 90, 50, 'r', 'N_piso', true, [0, 0]);
+        s += pol(fx, fy, 0, 52, 'r', 'f', true);
+        s += line(fx, fy, fx + 100, fy, 'dimL') + T(fx + 28, fy - 10, '60°', 'dl');
+        s += line(fx, fy + 22, tx, fy + 22, 'dimL') + T((fx + tx) / 2, fy + 34, '5·cos60°', 'dl');
+        s += line(tx + 18, fy, tx + 18, ty, 'dimL') + T(tx + 32, (fy + ty) / 2, '5·sen60°', 'dl', ).replace('class="lab dl"', 'class="lab dl" transform="rotate(-90 ' + (tx + 32) + ' ' + ((fy + ty) / 2) + ')"');
+      }
+      return svg(s, 215);
+    },
+    table(mode) {
+      let s = '';
+      if (mode !== 'd') {
+        s += line(40, 110, 250, 110, 'ink', 'stroke-width="3"') + line(60, 110, 60, 190) + line(230, 110, 230, 190);
+        s += box(110, 70, 60, 40, 'A 20 kg') + line(170, 90, 252, 90, 'ink', 'stroke-width="1.4"');
+        s += `<circle class="body" cx="252" cy="100" r="10"/>` + line(262, 100, 262, 140, 'ink', 'stroke-width="1.4"') + box(240, 140, 44, 32, 'B') + T(140, 128, 'μs = 0.3', 'dl');
+      } else {
+        s += box(60, 80, 60, 40, 'A') + pol(90, 100, -90, 70, 'f', 'W_A', false, [16, -8]) + pol(80, 120, 90, 40, 'r', 'N', true) + pol(120, 100, 0, 50, 'r', 'T') + pol(60, 114, 180, 40, 'r', 'f');
+        s += line(205, 20, 205, 195, 'dimL');
+        s += box(250, 90, 44, 32, 'B') + pol(272, 90, 90, 50, 'r', 'T') + pol(272, 122, -90, 50, 'f', 'W_B');
+      }
+      return svg(s, 210);
+    },
+    pulleyIncl(mode) { return incl({ th: 30, m: '30 kg', pul: true }, mode); },
+    pole(mode) {
+      const bx = 110, by = 180, ty = 60;
+      let s = hatchG(50, 230, by) + `<rect class="body" x="${bx - 6}" y="${ty}" width="12" height="${by - ty}" rx="2"/>`;
+      if (mode !== 'd') { s += pol(bx, ty, 60, 66, 'f', '1 kN', false, [10, 0]) + line(bx, ty, bx + 50, ty, 'dimL') + T(bx + 50, ty + 12, '60°', 'dl') + line(bx - 30, by, bx - 30, ty, 'dimL') + T(bx - 44, (by + ty) / 2, '4 m', 'dl'); }
+      else {
+        s += pol(bx, ty, 0, 40, 'rd', 'Fx = 500 N', false, [36, 0]) + pol(bx, ty, 90, 40, 'rd', 'Fy = 866 N', false, [-44, 14]);
+        s += `<circle class="inkf" cx="${bx}" cy="${by}" r="4"/>` + T(bx - 14, by + 14, 'O') + couple(bx, by - 18, 'cw', 'r', '', 14);
+        s += line(bx - 30, by, bx - 30, ty, 'dimL') + T(bx - 44, (by + ty) / 2, 'd = 4 m', 'dl').replace('class="lab dl"', `class="lab dl" transform="rotate(-90 ${bx - 44} ${(by + ty) / 2})"`);
+        s += T(250, 150, 'Fy pasa por O:', 'dl') + T(250, 166, 'no hace momento', 'dl');
+      }
+      return svg(s, 210);
+    },
+    point(mode) {
+      const ox = 70, oy = 175, k = 38, ax = ox + 2 * k, ay = oy - 3 * k;
+      const a = Math.atan2(-400, 300) * 180 / Math.PI;
+      let s = line(40, oy, 310, oy, 'dimL') + line(ox, 200, ox, 20, 'dimL') + `<circle class="inkf" cx="${ox}" cy="${oy}" r="4"/>` + T(ox - 12, oy + 14, 'O');
+      s += `<circle class="inkf" cx="${ax}" cy="${ay}" r="4"/>` + T(ax - 34, ay - 6, 'A(2, 3)');
+      if (mode !== 'd') s += pol(ax, ay, a, 80, 'f', '500 N', false, [18, 0]) + T(ax + 70, ay - 6, '(300, −400) N', 'dl');
+      else {
+        s += pol(ax, ay, 0, 48, 'rd', 'Fx = 300', false, [24, 0]) + pol(ax, ay, -90, 64, 'rd', 'Fy = −400', false, [36, 0]);
+        s += line(ox, ay, ax, ay, 'dimL') + T(ox - 18, ay, 'y = 3', 'dl') + line(ax, oy, ax, ay, 'dimL') + T(ax, oy + 14, 'x = 2', 'dl');
+        s += couple(ox, oy - 2, 'cw', 'r', '', 14);
+      }
+      return svg(s, 210);
+    },
+    parallelogram(mode) {
+      const cx = 80, cy = 160, sc = 2.1;
+      const a = [80 * sc, 0], b = [60 * sc * Math.cos(Math.PI / 3), 60 * sc * Math.sin(Math.PI / 3)];
+      let s = pol(cx, cy, 0, 80 * sc, mode === 'd' ? 'g' : 'f', '80 N') + pol(cx, cy, 60, 60 * sc, mode === 'd' ? 'g' : 'f', '60 N');
+      s += T(cx + 34, cy - 14, '60°', 'dl');
+      if (mode === 'd') {
+        s += line(cx + a[0], cy, cx + a[0] + b[0], cy - b[1], 'dimL') + line(cx + b[0], cy - b[1], cx + a[0] + b[0], cy - b[1], 'dimL');
+        s += arr(cx, cy, cx + a[0] + b[0], cy - b[1], 'r', 'R', 'head', [12, 0]) + T(cx + a[0] + 6, cy - 16, '120°', 'dl');
+      }
+      return svg(s, 210);
+    },
+    vcomp(mode) {
+      return vec({ F: [{ F: 150, a: 126.87, l: 'F' }], keep: true, extra: (m, cx, cy, sc) => m !== 'd' ? '' : '' }, mode);
+    },
+    truss5(mode) {
+      const P = { A: [50, 160], B: [170, 160], C: [290, 160], D: [110, 70], E: [230, 70] };
+      const bars = ['AB', 'BC', 'DE', 'AD', 'DB', 'BE', 'EC'];
+      let s = '';
+      bars.forEach(b => s += line(...P[b[0]], ...P[b[1]], 'ink', 'stroke-width="3.5" stroke-linecap="round"'));
+      bars.forEach((b, i) => { const [x1, y1] = P[b[0]], [x2, y2] = P[b[1]]; s += T((x1 + x2) / 2 + (y1 === y2 ? 0 : 8), (y1 + y2) / 2 + (y1 === y2 ? 12 : 0), String(i + 1), 'dl'); });
+      Object.entries(P).forEach(([k, [x, y]]) => s += `<circle class="body" cx="${x}" cy="${y}" r="5"/>` + T(x + (k === 'A' ? -14 : k === 'C' ? 14 : 0), y - 14, k));
+      if (mode !== 'd') s += pin(50, 165) + roller(290, 165);
+      else s += pol(50, 165, 90, 36, 'r', 'Ay', true) + pol(44, 160, 0, 26, 'r', 'Ax', true, [8, -12]) + pol(290, 165, 90, 36, 'r', 'Cy', true) + T(170, 218, 'r = 3 reacciones · b = 7 · n = 5', 'dl');
+      return svg(s, 232);
+    },
+    apex(mode) {
+      const x = 170, y = 60, L = 110, a = 30 * Math.PI / 180;
+      const lx = x - L * Math.cos(a), rx = x + L * Math.cos(a), yy = y + L * Math.sin(a);
+      let s = line(x, y, lx, yy, 'ink', 'stroke-width="4"') + line(x, y, rx, yy, 'ink', 'stroke-width="4"') + `<circle class="body" cx="${x}" cy="${y}" r="5"/>`;
+      if (mode !== 'd') s += pol(x, y + 4, -90, 46, 'f', '10 kN', false, [28, -6]) + line(lx, yy, rx, yy, 'dimL') + T(lx + 40, yy - 8, '30°', 'dl') + T(rx - 40, yy - 8, '30°', 'dl');
+      else {
+        s += pol(x, y, 180 + 30, 70, 'r', 'F', false, [-6, 8]) + pol(x, y, -30, 70, 'r', 'F', false, [6, 8]) + pol(x, y, -90, 48, 'f', '10 kN', false, [0, 0]);
+        s += T(x, 180, 'Supuestas en tensión (salen del nodo)', 'dl');
+      }
+      return svg(s, 200);
+    }
+  };
+
+  const kN = (x, F, ang = -90, extra = {}) => Object.assign({ x, ang, lab: F }, extra);
+  const DEF = [
+    // VECTORES 1-8
+    () => ({ k: 'vec', c: { F: [{ F: 250, a: 40, l: '250 N' }], comps: true } }),
+    () => ({ k: 'vec', c: { F: [{ F: 80, a: 215, l: '80 kN' }], comps: true } }),
+    () => ({ k: 'vec', c: { F: [{ F: 130, a: Math.atan2(5, 12) * 180 / Math.PI, l: '130 N (12:5)', o: [10, -6] }], comps: true } }),
+    () => ({ k: 'vec', c: { F: [{ F: 300, a: 0, l: '300 N', o: [0, 12] }, { F: 200, a: 90, l: '200 N' }], Rv: { x: 300, y: 200, l: 'R', show: false } } }),
+    () => ({ k: 'vec', c: { F: [{ F: 120, a: 45, l: '120 N' }, { F: 80, a: 150, l: '80 N' }], Rv: { x: 15.6, y: 124.9, l: 'R', o: [14, 0] } } }),
+    () => ({ k: 'vec', c: { F: [{ F: 400, a: 20, l: '400 N' }, { F: 250, a: 110, l: '250 N' }, { F: 300, a: 225, l: '300 N' }], Rv: { x: 78.2, y: 159.6, l: 'R', o: [14, 0] } } }),
+    () => ({ k: 'sp', c: 'parallelogram' }),
+    () => ({ k: 'vec', c: { F: [{ F: 90, a: 180, l: 'Fx = −90 N', o: [0, 14] }, { F: 120, a: 90, l: 'Fy = 120 N' }], Rv: { x: -90, y: 120, l: 'F = 150 N', show: false, o: [-10, 0] } } }),
+    // PARTÍCULA 9-16
+    () => ({ k: 'knot', c: { W: '500 N', k: [{ a: 140, g: '40°', T: 'T' }, { a: 40, g: '40°', T: 'T' }] } }),
+    () => ({ k: 'knot', c: { W: '800 N', k: [{ a: 150, g: '30°', T: 'T_A' }, { a: 60, g: '60°', T: 'T_B' }] } }),
+    () => ({ k: 'knot', c: { W: '20 kg', k: [{ a: 180, g: '', T: 'T₁' }, { a: 50, g: '50°', T: 'T₂' }] } }),
+    () => ({ k: 'sp', c: 'pulleyIncl' }),
+    () => ({ k: 'sp', c: 'spring' }),
+    () => ({ k: 'vec', c: { F: [{ F: 500, a: 0, l: '500 N', o: [0, 12] }, { F: 300, a: 90, l: '300 N' }], keep: true, Rv: { x: -500, y: -300, l: 'F₃', show: false } } }),
+    () => ({ k: 'incl', c: { th: 35, m: '40 kg', P: 'hor', mu: 'liso' } }),
+    () => ({ k: 'knot', c: { W: '1200 N', k: [{ a: 135, g: '45°', T: 'T₁' }, { a: 30, g: '30°', T: 'T₂' }] } }),
+    // MOMENTO 17-24
+    () => ({ k: 'beam', c: { L: 0.25, x0: 80, x1: 260, sup: [{ x: 0, t: 'point', n: 'O' }], P: [kN(0.25, '80 N')], D: [[0, 0.25, '0.25 m']], Mres: { x: 0, dir: 'cw', lab: 'M' } } }),
+    () => ({ k: 'beam', c: { L: 1.5, x0: 60, x1: 270, sup: [{ x: 0, t: 'point', n: 'O' }], P: [kN(1.5, '200 N', -150, { cx: 'F∥', cy: 'F⊥' })], comp: true, D: [[0, 1.5, '1.5 m']], Mres: { x: 0, dir: 'cw', lab: 'M' } } }),
+    () => ({ k: 'sp', c: 'point' }),
+    () => ({ k: 'beam', c: { L: 0.4, x0: 100, x1: 240, P: [kN(0, '50 N', 90), kN(0.4, '50 N', -90)], D: [[0, 0.4, '0.4 m']], Mres: { x: 0.2, dir: 'cw', lab: 'M = F·d' } } }),
+    () => ({ k: 'beam', c: { L: 2.5, x0: 60, x1: 270, sup: [{ x: 0, t: 'point', n: 'O' }], P: [kN(2.5, '600 N')], D: [[0, 2.5, '2.5 m']], Mres: { x: 0, dir: 'cw', lab: 'M' } } }),
+    () => ({ k: 'beam', c: { L: 3.5, x0: 40, x1: 300, sup: [{ x: 2, t: 'pivot', n: '', rn: 'R' }], P: [kN(0, '300 N'), kN(3.5, '400 N')], D: [[0, 2, '2 m'], [2, 3.5, 'd = ?']] } }),
+    () => ({ k: 'sp', c: 'pole' }),
+    () => ({ k: 'beam', c: { L: 4, sup: [{ x: 0, t: 'point', n: 'A' }], P: [kN(1, '100 N'), kN(3, '200 N', 90), kN(4, '150 N')], D: [[0, 1, '1 m'], [1, 3, '2 m'], [3, 4, '1 m']], Mres: { x: 0, dir: 'cw', lab: 'M_A' } } }),
+    // CUERPO RÍGIDO 25-34
+    () => ({ k: 'beam', c: { L: 6, sup: [{ x: 0, t: 'pin', n: 'A' }, { x: 6, t: 'roller', n: 'B' }], P: [kN(2, '12 kN')], D: [[0, 2, '2 m'], [2, 6, '4 m']] } }),
+    () => ({ k: 'beam', c: { L: 10, sup: [{ x: 0, t: 'pin', n: 'A' }, { x: 10, t: 'roller', n: 'B' }], P: [kN(3, '20 kN'), kN(7, '30 kN')], D: [[0, 3, '3 m'], [3, 7, '4 m'], [7, 10, '3 m']] } }),
+    () => ({ k: 'beam', c: { L: 6, sup: [{ x: 0, t: 'pin', n: 'A' }, { x: 4, t: 'roller', n: 'B' }], P: [kN(6, '10 kN')], D: [[0, 4, '4 m'], [4, 6, '2 m']] } }),
+    () => ({ k: 'beam', c: { L: 2, x0: 70, sup: [{ x: 0, t: 'fixed', n: 'A' }], P: [kN(2, '8 kN')], D: [[0, 2, '2 m']] } }),
+    () => ({ k: 'beam', c: { L: 5, sup: [{ x: 0, t: 'pin', n: 'A' }, { x: 5, t: 'roller', n: 'B' }], P: [kN(2.5, '10 kN', -60, { off: [-8, 0] })], comp: true, D: [[0, 2.5, '2.5 m'], [2.5, 5, '2.5 m']] } }),
+    () => ({ k: 'beam', c: { L: 4, sup: [{ x: 0, t: 'pin', n: 'A' }, { x: 4, t: 'roller', n: 'B' }], C: [{ x: 2, dir: 'cw', lab: '12 kN·m' }], D: [[0, 2, '2 m'], [2, 4, '2 m']] } }),
+    () => ({ k: 'sp', c: 'ladder' }),
+    () => ({ k: 'beam', c: { L: 3, x0: 60, x1: 230, y: 175, h: 240, wallTop: 160, sup: [{ x: 0, t: 'wallpin', n: 'A' }], cable: { x: 3, ang: 40 }, P: [kN(3, '900 N')], D: [[0, 3, '3 m']] } }),
+    () => ({ k: 'beam', c: { L: 1.5, x0: 70, x1: 280, sup: [{ x: 0, t: 'roller', n: 'Rueda', rn: 'R' }], P: [kN(0.5, '600 N'), kN(1.5, 'F = ?', 90)], D: [[0, 0.5, '0.5 m'], [0.5, 1.5, '1 m']] } }),
+    () => ({ k: 'beam', c: { L: 4, x0: 70, sup: [{ x: 0, t: 'fixed', n: 'A' }], P: [kN(2, '5 kN'), kN(4, '3 kN')], C: [{ x: 4, dir: 'ccw', lab: '4 kN·m' }], D: [[0, 2, '2 m'], [2, 4, '2 m']] } }),
+    // CARGAS DISTRIBUIDAS 35-40
+    () => ({ k: 'beam', c: { L: 6, y: 110, sup: [{ x: 0, t: 'pin', n: 'A' }, { x: 6, t: 'roller', n: 'B' }], W: [{ x1: 0, x2: 6, w1: 4, w2: 4, lab: '4 kN/m' }], D: [[0, 6, '6 m']] } }),
+    () => ({ k: 'beam', c: { L: 9, y: 110, sup: [{ x: 0, t: 'pin', n: 'A' }, { x: 9, t: 'roller', n: 'B' }], W: [{ x1: 0, x2: 9, w1: 0, w2: 6, lab: '0 → 6 kN/m' }], D: [[0, 9, '9 m']] } }),
+    () => ({ k: 'beam', c: { L: 3, x0: 70, y: 110, sup: [{ x: 0, t: 'fixed', n: 'A' }], W: [{ x1: 0, x2: 3, w1: 5, w2: 5, lab: '5 kN/m' }], D: [[0, 3, '3 m']] } }),
+    () => ({ k: 'beam', c: { L: 8, y: 110, sup: [{ x: 0, t: 'pin', n: 'A' }, { x: 8, t: 'roller', n: 'B' }], W: [{ x1: 0, x2: 4, w1: 2, w2: 2, lab: '2 kN/m' }], D: [[0, 4, '4 m'], [4, 8, '4 m']] } }),
+    () => ({ k: 'beam', c: { L: 6, y: 110, sup: [{ x: 0, t: 'pin', n: 'A' }, { x: 6, t: 'roller', n: 'B' }], W: [{ x1: 0, x2: 6, w1: 2, w2: 5, lab: '2 → 5 kN/m' }], Wd: [{ x1: 0, x2: 6, w1: 2, w2: 2, o: [-28, -2] }, { x1: 0, x2: 6, w1: 0, w2: 3, o: [26, -2] }], D: [[0, 6, '6 m']] } }),
+    () => ({ k: 'beam', c: { L: 4, x0: 70, y: 110, sup: [{ x: 0, t: 'fixed', n: 'A' }], W: [{ x1: 0, x2: 4, w1: 6, w2: 0, lab: '6 → 0 kN/m' }], D: [[0, 4, '4 m']] } }),
+    // FRICCIÓN 41-46
+    () => ({ k: 'floor', c: { m: '100 kg', mu: 'μs = 0.4', push: true, Pl: 'P = ?' } }),
+    () => ({ k: 'floor', c: { m: '50 kg', mu: 'μs = 0.35', push: true, Pl: '150 N' } }),
+    () => ({ k: 'incl', c: { th: 31, m: 'm', mu: 'μs = 0.6', f: 'up' } }),
+    () => ({ k: 'floor', c: { m: '80 kg', mu: 'μs = 0.5', a: 30, Pl: 'P = ?' } }),
+    () => ({ k: 'incl', c: { th: 30, m: '10 kg', mu: 'μs = 0.2', P: 'par', f: 'up' } }),
+    () => ({ k: 'sp', c: 'table' }),
+    // ARMADURAS 47-50
+    () => ({ k: 'tri', c: { span: 6, h: 4, P: '12 kN' } }),
+    () => ({ k: 'tri', c: { span: 8, h: 3, P: '18 kN' } }),
+    () => ({ k: 'sp', c: 'truss5' }),
+    () => ({ k: 'sp', c: 'apex' })
+  ];
+  const fn = { beam, vec, knot, incl, floor: floorB, tri };
+  return (i, mode) => {
+    const d = DEF[i](); if (!d) return '';
+    if (d.k === 'sp') return special[d.c](mode);
+    // en DCL de plano inclinado: añade fricción por defecto si hay μ
+    return fn[d.k](d.c, mode);
+  };
+})();
+const EJ = [
+// VECTORES
+{t:'vec',n:1,q:'Una fuerza de 250 N actúa a 40° sobre el eje +x. Halla sus componentes Fx y Fy.',h:'Ángulo medido desde x: el coseno va con Fx.',s:['\\(F_x = 250\\cdot \\cos 40^\\circ  = 191.5\\,\\text{N}\\)','\\(F_y = 250\\cdot \\operatorname{sen} 40^\\circ  = 160.7\\,\\text{N}\\)'],a:'\\(F_x = 191.5\\,\\text{N}, F_y = 160.7\\,\\text{N}\\)'},
+{t:'vec',n:1,q:'Una fuerza de 80 kN apunta abajo y a la izquierda, formando 35° por debajo del eje −x. Halla Fx y Fy con su signo.',h:'Tercer cuadrante: ambas componentes son negativas.',s:['\\(F_x = -80\\cdot \\cos 35^\\circ  = -65.5\\,\\text{kN}\\)','\\(F_y = -80\\cdot \\operatorname{sen} 35^\\circ  = -45.9\\,\\text{kN}\\)'],a:'\\(F_x = -65.5\\,\\text{kN}, F_y = -45.9\\,\\text{kN}\\)'},
+{t:'vec',n:1,q:'Una fuerza de 130 N tiene la pendiente de un triángulo 5-12-13 (12 horizontal a la derecha, 5 vertical hacia arriba). Halla sus componentes.',h:'Usa proporciones: lado/hipotenusa.',s:['\\(F_x = 130\\cdot (12/13) = 120\\,\\text{N}\\)','\\(F_y = 130\\cdot (5/13) = 50\\,\\text{N}\\)'],a:'\\(F_x = 120\\,\\text{N}, F_y = 50\\,\\text{N}\\)'},
+{t:'vec',n:1,q:'Sobre un punto actúan 300 N horizontal hacia la derecha y 200 N vertical hacia arriba. Halla la resultante.',h:'Ya están descompuestas: usa Pitágoras.',s:['\\(R = \\sqrt{300^2 + 200^2} = 360.6\\,\\text{N}\\)','\\(\\theta  = \\tan^{-1}(200/300) = 33.7^\\circ\\)'],a:'\\(R = 360.6\\,\\text{N} \\text{ a } 33.7^\\circ  \\text{ sobre } +x\\)'},
+{t:'vec',n:2,q:'F₁ = 120 N a 45° y F₂ = 80 N a 150° (ángulos medidos desde +x, antihorario). Halla la resultante.',h:'cos150° es negativo: F₂ apunta a la izquierda.',s:['\\(\\Sigma F_x = 120\\cdot \\cos 45^\\circ  + 80\\cdot \\cos 150^\\circ  = 84.9 - 69.3 = 15.6\\,\\text{N}\\)','\\(\\Sigma F_y = 120\\cdot \\operatorname{sen} 45^\\circ  + 80\\cdot \\operatorname{sen} 150^\\circ  = 84.9 + 40 = 124.9\\,\\text{N}\\)','\\(R = \\sqrt{15.6^2 + 124.9^2} = 125.8\\,\\text{N}; \\theta  = \\tan^{-1}(124.9/15.6) = 82.9^\\circ\\)'],a:'\\(R = 125.8\\,\\text{N} \\text{ a } 82.9^\\circ\\)'},
+{t:'vec',n:2,q:'Tres fuerzas: 400 N a 20°, 250 N a 110° y 300 N a 225° (medidos desde +x). Halla la resultante.',h:'Haz una tabla con Fx y Fy de cada fuerza.',s:['\\(\\Sigma F_x = 375.9 - 85.5 - 212.1 = 78.2\\,\\text{N}\\)','\\(\\Sigma F_y = 136.8 + 234.9 - 212.1 = 159.6\\,\\text{N}\\)','\\(R = 177.7\\,\\text{N}; \\theta  = \\tan^{-1}(159.6/78.2) = 63.9^\\circ\\)'],a:'\\(R = 177.7\\,\\text{N} \\text{ a } 63.9^\\circ\\)'},
+{t:'vec',n:2,q:'Dos fuerzas de 60 N y 80 N salen del mismo punto y forman 60° entre sí. Halla la magnitud de la resultante.',h:'Paralelogramo: el ángulo entre las fuerzas es 60°, el del triángulo de fuerzas es 120°.',s:['\\(R^2 = 60^2 + 80^2 - 2\\cdot 60\\cdot 80\\cdot \\cos 120^\\circ\\)','\\(R^2 = 3600 + 6400 + 4800 = 14\\,800\\)'],a:'\\(R = 121.7\\,\\text{N}\\)'},
+{t:'vec',n:1,q:'Una fuerza tiene componentes Fx = −90 N y Fy = 120 N. Halla su magnitud y su dirección.',h:'Segundo cuadrante: cuidado con el ángulo que da la calculadora.',s:['\\(F = \\sqrt{90^2 + 120^2} = 150\\,\\text{N}\\)','\\(\\tan^{-1}(120/90) = 53.1^\\circ  \\text{ sobre el eje } -x\\)','\\(\\text{ Desde } +x: 180^\\circ  - 53.1^\\circ  = 126.9^\\circ\\)'],a:'\\(F = 150\\,\\text{N} \\text{ a } 126.9^\\circ  (53.1^\\circ  \\text{ sobre } -x)\\)'},
+// PARTÍCULA
+{t:'par',n:1,q:'Un peso de 500 N cuelga de dos cables simétricos; cada uno forma 40° con la horizontal. Halla la tensión en cada cable.',h:'Por simetría las dos tensiones son iguales.',s:['\\(\\Sigma F_y: 2\\cdot T\\cdot \\operatorname{sen} 40^\\circ  - 500 = 0\\)','\\(T = 500 / (2\\cdot 0.643)\\)'],a:'\\(T = 388.9\\,\\text{N} \\text{ en cada cable }\\)'},
+{t:'par',n:2,q:'Un peso de 800 N cuelga de dos cables: A a 30° con la horizontal (hacia la izquierda) y B a 60° (hacia la derecha). Halla T_A y T_B.',h:'De ΣFx sale la relación entre T_A y T_B.',s:['\\(\\Sigma F_x: -T_{A}\\cdot \\cos 30^\\circ  + T_{B}\\cdot \\cos 60^\\circ  = 0 \\;\\rightarrow\\; T_{B} = 1.732\\cdot T_{A}\\)','\\(\\Sigma F_y: T_{A}\\cdot \\operatorname{sen} 30^\\circ  + T_{B}\\cdot \\operatorname{sen} 60^\\circ  = 800 \\;\\rightarrow\\; 0.5\\cdot T_{A} + 1.5\\cdot T_{A} = 800\\)'],a:'\\(T_{A} = 400\\,\\text{N}, T_{B} = 692.8\\,\\text{N}\\)'},
+{t:'par',n:1,q:'Una masa de 20 kg está sostenida por un cable horizontal y otro cable que forma 50° con la horizontal. Halla ambas tensiones.',h:'Solo el cable inclinado puede sostener el peso en vertical.',s:['\\(W = 20\\cdot 9.81 = 196.2\\,\\text{N}\\)','\\(\\Sigma F_y: T_2\\cdot \\operatorname{sen} 50^\\circ  = 196.2 \\;\\rightarrow\\; T_2 = 256.1\\,\\text{N}\\)','\\(\\Sigma F_x: T_1 = T_2\\cdot \\cos 50^\\circ  = 164.6\\,\\text{N}\\)'],a:'Cable inclinado 256.1 N, cable horizontal 164.6 N'},
+{t:'par',n:2,q:'Un bloque de 30 kg está en un plano liso inclinado 30°. Una cuerda paralela al plano pasa por una polea ideal en la cima y sostiene una masa colgante m. ¿Qué masa m mantiene el sistema en equilibrio?',h:'La tensión de la cuerda es igual a ambos lados de la polea.',s:['\\(\\text{ Bloque }: T = W\\cdot \\operatorname{sen} 30^\\circ  = 30g\\cdot 0.5 = 15g\\)','\\(\\text{ Masa colgante }: T = m\\cdot g\\)'],a:'\\(m = 15\\,\\text{kg}\\)'},
+{t:'par',n:1,q:'Un resorte de rigidez k = 2000 N/m sostiene un peso de 150 N. ¿Cuánto se alarga?',h:'F = k·s.',s:['\\(s = F / k = 150 / 2000\\)'],a:'\\(s = 0.075\\,\\text{m} = 7.5\\,\\text{cm}\\)'},
+{t:'par',n:2,q:'Sobre un anillo actúan 500 N hacia +x y 300 N hacia +y. ¿Qué tercera fuerza F₃ lo deja en equilibrio?',h:'F₃ es igual y opuesta a la resultante de las otras dos.',s:['\\(\\text{ Resultante }: R = \\sqrt{500^2 + 300^2} = 583.1\\,\\text{N} \\text{ a } 31.0^\\circ\\)','F₃ apunta en sentido contrario: 31.0° por debajo del eje −x (211°)'],a:'\\(F_3 = 583.1\\,\\text{N} \\text{ a } 211^\\circ  (31^\\circ  \\text{ bajo } -x)\\)'},
+{t:'par',n:2,q:'Un bloque de 40 kg está en un plano liso inclinado 35° y lo sostiene una fuerza horizontal P. Halla P y la normal N.',h:'Con ejes normales (x horizontal, y vertical) la normal está inclinada 35°.',s:['\\(W = 392.4\\,\\text{N}\\)','\\(\\Sigma F_y: N\\cdot \\cos 35^\\circ  = W \\;\\rightarrow\\; N = 479.0\\,\\text{N}\\)','\\(\\Sigma F_x: P = N\\cdot \\operatorname{sen} 35^\\circ  = W\\cdot \\tan 35^\\circ\\)'],a:'\\(P = 274.8\\,\\text{N}, N = 479.0\\,\\text{N}\\)'},
+{t:'par',n:3,q:'Una carga de 1200 N cuelga de dos cables: uno a 45° con la horizontal (izquierda) y otro a 30° (derecha). Halla ambas tensiones.',h:'Despeja T₂ en función de T₁ con ΣFx y sustituye en ΣFy.',s:['\\(\\Sigma F_x: T_1\\cdot \\cos 45^\\circ  = T_2\\cdot \\cos 30^\\circ  \\;\\rightarrow\\; T_2 = 0.8165\\cdot T_1\\)','\\(\\Sigma F_y: T_1\\cdot \\operatorname{sen} 45^\\circ  + T_2\\cdot \\operatorname{sen} 30^\\circ  = 1200 \\;\\rightarrow\\; 1.1154\\cdot T_1 = 1200\\)'],a:'\\(T_1 (45^\\circ ) = 1075.9\\,\\text{N}, T_2 (30^\\circ ) = 878.5\\,\\text{N}\\)'},
+// MOMENTO
+{t:'mom',n:1,q:'Aplicas 80 N perpendicular al mango de una llave de 0.25 m. ¿Qué momento produces sobre la tuerca?',h:'M = F·d.',s:['\\(M = 80\\cdot 0.25\\)'],a:'\\(M = 20\\,\\text{N·m}\\)'},
+{t:'mom',n:2,q:'Una fuerza de 200 N actúa en el extremo de una barra de 1.5 m, formando 30° con la barra. Halla el momento respecto al otro extremo.',h:'Solo la componente perpendicular a la barra produce momento.',s:['\\(F\\perp  = 200\\cdot \\operatorname{sen} 30^\\circ  = 100\\,\\text{N}\\)','\\(M = 100\\cdot 1.5\\)'],a:'\\(M = 150\\,\\text{N·m}\\)'},
+{t:'mom',n:2,q:'La fuerza F = (300 N, −400 N) actúa en el punto (2 m, 3 m). Halla el momento respecto al origen.',h:'M = x·Fy − y·Fx.',s:['\\(M = 2\\cdot (-400) - 3\\cdot (300) = -800 - 900\\)'],a:'\\(M = -1700\\,\\text{N·m} (1700\\,\\text{N·m} \\text{ horario })\\)'},
+{t:'mom',n:1,q:'Dos fuerzas de 50 N, paralelas y opuestas, están separadas 0.4 m. ¿Cuánto vale el par?',h:'Par: M = F·d, igual respecto a cualquier punto.',s:['\\(M = 50\\cdot 0.4\\)'],a:'\\(M = 20\\,\\text{N·m}\\)'},
+{t:'mom',n:1,q:'Una fuerza de 600 N hacia abajo actúa a 2.5 m a la derecha del punto O. Halla el momento respecto a O con su signo.',h:'Hacia abajo a la derecha de O hace girar en sentido horario.',s:['\\(M = -600\\cdot 2.5\\)'],a:'\\(M = -1500\\,\\text{N·m} (\\text{ horario })\\)'},
+{t:'mom',n:1,q:'En un balancín, un niño de 300 N se sienta a 2 m del pivote. ¿A qué distancia debe sentarse otro niño de 400 N para equilibrarlo?',h:'Los momentos de ambos lados deben ser iguales.',s:['\\(300\\cdot 2 = 400\\cdot d\\)'],a:'\\(d = 1.5\\,\\text{m}\\)'},
+{t:'mom',n:2,q:'Una fuerza de 1 kN a 60° sobre la horizontal (hacia la derecha) se aplica en la punta de un poste vertical de 4 m. Halla el momento respecto a la base.',h:'La componente vertical pasa por la base: no hace momento.',s:['\\(F_x = 1000\\cdot \\cos 60^\\circ  = 500\\,\\text{N}; F_y = 866\\,\\text{N}\\)','\\(M = x\\cdot F_y - y\\cdot F_x = 0\\cdot 866 - 4\\cdot 500\\)'],a:'\\(M = -2000\\,\\text{N·m} (2\\,\\text{kN·m} \\text{ horario })\\)'},
+{t:'mom',n:2,q:'Sobre una barra actúan, desde el extremo A: 100 N ↓ a 1 m, 200 N ↑ a 3 m y 150 N ↓ a 4 m. Halla el momento resultante respecto a A.',h:'↑ a la derecha de A es antihorario (+), ↓ es horario (−).',s:['\\(M = -100\\cdot 1 + 200\\cdot 3 - 150\\cdot 4 = -100 + 600 - 600\\)'],a:'\\(M_{A} = -100\\,\\text{N·m} (100\\,\\text{N·m} \\text{ horario })\\)'},
+// CUERPO RÍGIDO
+{t:'rig',n:1,q:'Una viga de 6 m simplemente apoyada (A pasador, B rodillo) tiene una carga de 12 kN a 2 m de A. Halla las reacciones.',h:'ΣM en A elimina Ax y Ay.',s:['\\(\\Sigma M_{A}: B\\cdot 6 - 12\\cdot 2 = 0 \\;\\rightarrow\\; B = 4\\,\\text{kN}\\)','\\(\\Sigma F_y: A + 4 - 12 = 0 \\;\\rightarrow\\; A = 8\\,\\text{kN}\\)'],a:'\\(A_y = 8\\,\\text{kN} \\uparrow , B_y = 4\\,\\text{kN} \\uparrow\\)'},
+{t:'rig',n:1,q:'Una viga de 10 m simplemente apoyada tiene 20 kN a 3 m de A y 30 kN a 7 m de A. Halla las reacciones.',h:'Toma momentos en A.',s:['\\(\\Sigma M_{A}: B\\cdot 10 - 20\\cdot 3 - 30\\cdot 7 = 0 \\;\\rightarrow\\; B = 27\\,\\text{kN}\\)','\\(\\Sigma F_y: A = 50 - 27 = 23\\,\\text{kN}\\)'],a:'\\(A_y = 23\\,\\text{kN} \\uparrow , B_y = 27\\,\\text{kN} \\uparrow\\)'},
+{t:'rig',n:2,q:'Una viga tiene apoyos en A (x = 0, pasador) y B (x = 4 m, rodillo), y un voladizo con una carga de 10 kN en x = 6 m. Halla las reacciones.',h:'La carga está fuera de los apoyos: una reacción saldrá negativa.',s:['\\(\\Sigma M_{A}: B\\cdot 4 - 10\\cdot 6 = 0 \\;\\rightarrow\\; B = 15\\,\\text{kN}\\)','\\(\\Sigma F_y: A + 15 - 10 = 0 \\;\\rightarrow\\; A = -5\\,\\text{kN}\\)'],a:'\\(B_y = 15\\,\\text{kN} \\uparrow , A_y = 5\\,\\text{kN} \\downarrow\\)'},
+{t:'rig',n:1,q:'Una viga en voladizo de 2 m está empotrada en A y tiene 8 kN en el extremo libre. Halla las reacciones en A.',h:'El empotramiento tiene Ax, Ay y M_A.',s:['\\(\\Sigma F_y: A_y = 8\\,\\text{kN}\\)','\\(\\Sigma M_{A}: M_{A} - 8\\cdot 2 = 0\\)'],a:'\\(A_y = 8\\,\\text{kN} \\uparrow , M_{A} = 16\\,\\text{kN·m} \\text{ antihorario }\\)'},
+{t:'rig',n:2,q:'Una viga de 5 m simplemente apoyada tiene en el centro una fuerza de 10 kN inclinada 60° respecto a la horizontal (hacia abajo y a la derecha). Halla las reacciones.',h:'Solo el pasador puede tomar la componente horizontal.',s:['\\(\\text{ Componentes }: \\text{ vertical } 10\\cdot \\operatorname{sen} 60^\\circ  = 8.66\\,\\text{kN}, \\text{ horizontal } 10\\cdot \\cos 60^\\circ  = 5\\,\\text{kN}\\)','\\(\\text{ Por simetr}\\mathrm{\\acute{\\imath}}\\text{a }: A_y = B_y = 8.66/2\\)','\\(\\Sigma F_x: A_x = 5\\,\\text{kN} (\\text{ hacia la izquierda })\\)'],a:'\\(A_y = B_y = 4.33\\,\\text{kN} \\uparrow , A_x = 5\\,\\text{kN} \\leftarrow\\)'},
+{t:'rig',n:2,q:'Una viga de 4 m simplemente apoyada solo tiene un par de 12 kN·m horario aplicado en el centro. Halla las reacciones.',h:'Un par se suma igual en ΣM sin importar dónde esté.',s:['\\(\\Sigma M_{A}: B\\cdot 4 - 12 = 0 \\;\\rightarrow\\; B = 3\\,\\text{kN}\\)','\\(\\Sigma F_y: A + 3 = 0 \\;\\rightarrow\\; A = -3\\,\\text{kN}\\)'],a:'\\(B_y = 3\\,\\text{kN} \\uparrow , A_y = 3\\,\\text{kN} \\downarrow  (\\text{ forman un par opuesto })\\)'},
+{t:'rig',n:3,q:'Una escalera de 5 m y 200 N se apoya en una pared lisa y en un piso rugoso, formando 60° con el piso. Halla la reacción de la pared y el μs mínimo del piso.',h:'Pared lisa: solo una fuerza horizontal. Toma momentos en la base.',s:['\\(\\Sigma M_{\\text{base}}: N_{\\text{pared}}\\cdot 5\\cdot \\operatorname{sen} 60^\\circ  - 200\\cdot 2.5\\cdot \\cos 60^\\circ  = 0 \\;\\rightarrow\\; N_{\\text{pared}} = 57.7\\,\\text{N}\\)','\\(\\Sigma F_x: f = 57.7\\,\\text{N}; \\Sigma F_y: N_{\\text{piso}} = 200\\,\\text{N}\\)','\\(\\mu_s \\text{ m}\\mathrm{\\acute{\\imath}}\\text{n } = 57.7/200\\)'],a:'\\(N_{\\text{pared}} = 57.7\\,\\text{N}, \\mu_s \\text{ m}\\mathrm{\\acute{\\imath}}\\text{n } = 0.289\\)'},
+{t:'rig',n:2,q:'Una barra horizontal de 3 m, de peso despreciable, está articulada a una pared en A. En el extremo B cuelgan 900 N y un cable va de B a la pared formando 40° con la barra. Halla T y las reacciones en A.',h:'ΣM en A: solo T·sen40° produce momento.',s:['\\(\\Sigma M_{A}: T\\cdot \\operatorname{sen} 40^\\circ \\cdot 3 - 900\\cdot 3 = 0 \\;\\rightarrow\\; T = 1400.2\\,\\text{N}\\)','\\(\\Sigma F_x: A_x = T\\cdot \\cos 40^\\circ  = 1072.6\\,\\text{N}\\)','\\(\\Sigma F_y: A_y + T\\cdot \\operatorname{sen} 40^\\circ  - 900 = 0 \\;\\rightarrow\\; A_y = 0\\)'],a:'\\(T = 1400.2\\,\\text{N}, A_x = 1072.6\\,\\text{N}, A_y = 0\\)'},
+{t:'rig',n:1,q:'Una carretilla carga 600 N cuyo centro de gravedad está a 0.5 m del eje de la rueda. Los mangos están a 1.5 m del eje. ¿Qué fuerza vertical hay que hacer en los mangos? ¿Cuánto soporta la rueda?',h:'Toma momentos en el eje de la rueda.',s:['\\(\\Sigma M_{\\text{rueda}}: F\\cdot 1.5 - 600\\cdot 0.5 = 0 \\;\\rightarrow\\; F = 200\\,\\text{N}\\)','\\(\\Sigma F_y: R = 600 - 200\\)'],a:'\\(F = 200\\,\\text{N}, \\text{ rueda } 400\\,\\text{N}\\)'},
+{t:'rig',n:3,q:'Una viga de 4 m empotrada en A tiene 5 kN a 2 m, 3 kN en el extremo (4 m) y un par antihorario de 4 kN·m en el extremo. Halla las reacciones en A.',h:'El par antihorario suma positivo en ΣM.',s:['\\(\\Sigma F_y: A_y = 5 + 3 = 8\\,\\text{kN}\\)','\\(\\Sigma M_{A}: M_{A} - 5\\cdot 2 - 3\\cdot 4 + 4 = 0 \\;\\rightarrow\\; M_{A} = 18\\,\\text{kN·m}\\)'],a:'\\(A_y = 8\\,\\text{kN} \\uparrow , M_{A} = 18\\,\\text{kN·m} \\text{ antihorario }\\)'},
+// CARGAS DISTRIBUIDAS
+{t:'dis',n:1,q:'Una viga de 6 m simplemente apoyada lleva una carga uniforme de 4 kN/m en toda su longitud. Halla las reacciones.',h:'R = w·L en el centro.',s:['\\(R = 4\\cdot 6 = 24\\,\\text{kN} \\text{ en } x = 3\\,\\text{m}\\)','Por simetría, cada apoyo toma la mitad'],a:'\\(A_y = B_y = 12\\,\\text{kN} \\uparrow\\)'},
+{t:'dis',n:2,q:'Una viga de 9 m simplemente apoyada lleva una carga triangular que va de 0 en A a 6 kN/m en B. Halla las reacciones.',h:'Triangular: ½·w·L a L/3 del lado alto (a 2L/3 de A).',s:['\\(R = ½\\cdot 6\\cdot 9 = 27\\,\\text{kN} \\text{ en } x = 6\\,\\text{m}\\)','\\(\\Sigma M_{A}: B\\cdot 9 - 27\\cdot 6 = 0 \\;\\rightarrow\\; B = 18\\,\\text{kN}\\)','\\(\\Sigma F_y: A = 27 - 18\\)'],a:'\\(A_y = 9\\,\\text{kN} \\uparrow , B_y = 18\\,\\text{kN} \\uparrow\\)'},
+{t:'dis',n:1,q:'Un voladizo de 3 m empotrado en A lleva una carga uniforme de 5 kN/m. Halla las reacciones.',h:'Resultante en la mitad del voladizo.',s:['\\(R = 5\\cdot 3 = 15\\,\\text{kN} \\text{ en } x = 1.5\\,\\text{m}\\)','\\(A_y = 15\\,\\text{kN}; M_{A} = 15\\cdot 1.5\\)'],a:'\\(A_y = 15\\,\\text{kN} \\uparrow , M_{A} = 22.5\\,\\text{kN·m} \\text{ antihorario }\\)'},
+{t:'dis',n:2,q:'Una viga de 8 m simplemente apoyada lleva 2 kN/m solo en los primeros 4 m (desde A). Halla las reacciones.',h:'La resultante va en el centro del tramo cargado, no de la viga.',s:['\\(R = 2\\cdot 4 = 8\\,\\text{kN} \\text{ en } x = 2\\,\\text{m}\\)','\\(\\Sigma M_{A}: B\\cdot 8 - 8\\cdot 2 = 0 \\;\\rightarrow\\; B = 2\\,\\text{kN}\\)','\\(\\Sigma F_y: A = 8 - 2\\)'],a:'\\(A_y = 6\\,\\text{kN} \\uparrow , B_y = 2\\,\\text{kN} \\uparrow\\)'},
+{t:'dis',n:3,q:'Una viga de 6 m simplemente apoyada lleva una carga trapezoidal que va de 2 kN/m en A a 5 kN/m en B. Halla las reacciones.',h:'Divide en un rectángulo de 2 kN/m y un triángulo de 3 kN/m.',s:['\\(\\text{ Rect}\\mathrm{\\acute{a}}\\text{ngulo }: 2\\cdot 6 = 12\\,\\text{kN} \\text{ en } x = 3\\,\\text{m}\\)','\\(\\text{ Tri}\\mathrm{\\acute{a}}\\text{ngulo }: ½\\cdot 3\\cdot 6 = 9\\,\\text{kN} \\text{ en } x = 4\\,\\text{m}\\)','\\(\\Sigma M_{A}: B\\cdot 6 - 12\\cdot 3 - 9\\cdot 4 = 0 \\;\\rightarrow\\; B = 12\\,\\text{kN}\\)','\\(\\Sigma F_y: A = 21 - 12\\)'],a:'\\(A_y = 9\\,\\text{kN} \\uparrow , B_y = 12\\,\\text{kN} \\uparrow\\)'},
+{t:'dis',n:2,q:'Un voladizo de 4 m empotrado en A tiene una carga triangular de 6 kN/m en el empotramiento que baja a 0 en el extremo libre. Halla las reacciones.',h:'El lado alto está en A: la resultante va a L/3 de A.',s:['\\(R = ½\\cdot 6\\cdot 4 = 12\\,\\text{kN} \\text{ a } 4/3\\,\\text{m} \\text{ de } A\\)','\\(A_y = 12\\,\\text{kN}; M_{A} = 12\\cdot (4/3)\\)'],a:'\\(A_y = 12\\,\\text{kN} \\uparrow , M_{A} = 16\\,\\text{kN·m} \\text{ antihorario }\\)'},
+// FRICCIÓN
+{t:'fri',n:1,q:'Una caja de 100 kg está en un piso con μs = 0.4. ¿Qué fuerza horizontal la pone a punto de moverse?',h:'A punto de moverse: f = μs·N.',s:['\\(N = W = 100\\cdot 9.81 = 981\\,\\text{N}\\)','\\(P = 0.4\\cdot 981\\)'],a:'\\(P = 392.4\\,\\text{N}\\)'},
+{t:'fri',n:1,q:'Empujas horizontalmente con 150 N una caja de 50 kg; μs = 0.35. ¿Se mueve? ¿Cuánto vale la fricción?',h:'Compara la fricción necesaria con la máxima.',s:['\\(f_{\\text{m}\\mathrm{\\acute{a}}\\text{x}} = 0.35\\cdot 50\\cdot 9.81 = 171.7\\,\\text{N}\\)','\\(\\text{ Fricci}\\mathrm{\\acute{o}}\\text{n necesaria } = 150\\,\\text{N} < 171.7\\,\\text{N}\\)'],a:'\\(\\text{ No se mueve }; f = 150\\,\\text{N} (\\text{ no } 171.7\\,\\text{N})\\)'},
+{t:'fri',n:1,q:'¿Cuál es el ángulo máximo de un plano para que un bloque no deslice si μs = 0.6?',h:'tan θ = μs.',s:['\\(\\theta  = \\tan^{-1}(0.6)\\)'],a:'\\(\\theta  = 31.0^\\circ\\)'},
+{t:'fri',n:3,q:'Jalas una caja de 80 kg con una cuerda a 30° sobre la horizontal; μs = 0.5. ¿Qué tensión la pone a punto de moverse?',h:'La componente vertical de la cuerda reduce la normal.',s:['\\(N = 784.8 - P\\cdot \\operatorname{sen} 30^\\circ\\)','\\(P\\cdot \\cos 30^\\circ  = 0.5\\cdot (784.8 - 0.5\\cdot P)\\)','\\(P\\cdot (0.866 + 0.25) = 392.4\\)'],a:'\\(P = 351.6\\,\\text{N}\\)'},
+{t:'fri',n:2,q:'Un bloque de 10 kg está en un plano inclinado 30° con μs = 0.2. ¿Desliza? Si sí, ¿qué fuerza paralela al plano hacia arriba lo detiene?',h:'Compara tan30° con μs.',s:['\\(\\tan 30^\\circ  = 0.577 > 0.2 \\;\\rightarrow\\; \\text{ desliza }\\)','\\(W\\cdot \\operatorname{sen} 30^\\circ  = 49.05\\,\\text{N}; f_{\\text{m}\\mathrm{\\acute{a}}\\text{x}} = 0.2\\cdot 98.1\\cdot \\cos 30^\\circ  = 16.99\\,\\text{N}\\)','\\(P = 49.05 - 16.99\\)'],a:'\\(\\text{ S}\\mathrm{\\acute{\\imath}}\\text{ desliza }; P = 32.1\\,\\text{N}\\)'},
+{t:'fri',n:2,q:'Un bloque A de 20 kg está en una mesa (μs = 0.3). Una cuerda horizontal pasa por una polea en el borde y sostiene un bloque colgante B. ¿Cuál es la masa máxima de B sin que A se mueva?',h:'La tensión es el peso de B y no puede superar μs·N_A.',s:['\\(f_{\\text{m}\\mathrm{\\acute{a}}\\text{x}} = 0.3\\cdot 20\\cdot g = 6g\\)','\\(m_{B}\\cdot g = 6g\\)'],a:'\\(m_{B} \\text{ m}\\mathrm{\\acute{a}}\\text{x } = 6\\,\\text{kg}\\)'},
+// ARMADURAS
+{t:'arm',n:2,q:'Armadura triangular: A (pasador) y B (rodillo) separados 6 m, nodo C arriba en el centro a 4 m de altura, 12 kN hacia abajo en C. Halla las fuerzas en AC, BC y AB.',h:'Las barras inclinadas miden 5 m (triángulo 3-4-5).',s:['\\(\\text{ Reacciones }: A_y = B_y = 6\\,\\text{kN}\\)','\\(\\text{ Nodo } A, \\Sigma F_y: 6 + F_{AC}\\cdot (4/5) = 0 \\;\\rightarrow\\; F_{AC} = -7.5\\,\\text{kN}\\)','\\(\\Sigma F_x: F_{AB} + F_{AC}\\cdot (3/5) = 0 \\;\\rightarrow\\; F_{AB} = 4.5\\,\\text{kN}\\)'],a:'\\(\\text{ AC } = \\text{ BC } = 7.5\\,\\text{kN} (C), \\text{ AB } = 4.5\\,\\text{kN} (T)\\)'},
+{t:'arm',n:2,q:'Misma forma triangular con luz de 8 m y altura de 3 m, con 18 kN en el vértice. Halla las fuerzas en las barras.',h:'Las barras inclinadas miden 5 m: sen = 3/5, cos = 4/5.',s:['\\(A_y = B_y = 9\\,\\text{kN}\\)','\\(\\text{ Nodo } A: 9 + F_{AC}\\cdot (3/5) = 0 \\;\\rightarrow\\; F_{AC} = -15\\,\\text{kN}\\)','\\(F_{AB} = 15\\cdot (4/5) = 12\\,\\text{kN}\\)'],a:'\\(\\text{ AC } = \\text{ BC } = 15\\,\\text{kN} (C), \\text{ AB } = 12\\,\\text{kN} (T)\\)'},
+{t:'arm',n:1,q:'Una armadura plana tiene 7 barras, 5 nodos, un pasador y un rodillo. ¿Es estáticamente determinada?',h:'Usa b + r = 2n.',s:['\\(b + r = 7 + 3 = 10\\)','\\(2n = 2\\cdot 5 = 10\\)'],a:'\\(\\text{ S}\\mathrm{\\acute{\\imath}}\\text{ }: b + r = 2n\\)'},
+{t:'arm',n:2,q:'En el vértice superior de una armadura llegan dos barras, cada una a 30° con la horizontal (simétricas), y cuelga una carga de 10 kN. Halla la fuerza en cada barra.',h:'Nodo con dos incógnitas iguales por simetría.',s:['\\(\\Sigma F_y \\text{ en el nodo }: 2\\cdot F\\cdot \\operatorname{sen} 30^\\circ  = 10\\)','\\(F = 10 / (2\\cdot 0.5)\\)'],a:'\\(F = 10\\,\\text{kN} \\text{ en cada barra } (C)\\)'}
+];
+
+(() => {
+  const TEMAS = { all:'Todos', vec:'Vectores', par:'Partícula', mom:'Momento', rig:'Cuerpo rígido', dis:'Cargas dist.', fri:'Fricción', arm:'Armaduras' };
+  const NIVEL = { 0:'Todos', 1:'Básico', 2:'Medio', 3:'Avanzado' };
+  const KEY = 'estatica-ejercicios-v1';
+  let done = {};
+  try { done = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  let tema = 'all', nivel = 0, hideDone = false;
+  const bank = document.getElementById('bank');
+  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  function chips(el, obj, get, set) {
+    el.innerHTML = '';
+    Object.entries(obj).forEach(([k, label]) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip';
+      const n = k === 'all' || k === '0' ? EJ.length : EJ.filter(e => (obj === TEMAS ? e.t === k : String(e.n) === k)).length;
+      b.innerHTML = esc(label) + '<span class="c">' + n + '</span>';
+      b.setAttribute('aria-pressed', String(get()) === k);
+      b.onclick = () => { set(k); chips(el, obj, get, set); render(); };
+      el.append(b);
+    });
+  }
+  chips(document.getElementById('f-tema'), TEMAS, () => tema, k => tema = k);
+  chips(document.getElementById('f-nivel'), NIVEL, () => nivel, k => nivel = Number(k));
+
+  EJ.forEach((e, i) => {
+    const card = document.createElement('article');
+    card.className = 'ej'; card.id = 'ej-' + (i + 1);
+    card.innerHTML =
+      '<div class="ej-h"><span class="no">#' + (i + 1) + '</span><span class="pill">' + TEMAS[e.t] + '</span>' +
+      '<span class="lvl" title="' + NIVEL[e.n] + '"><b>' + '●'.repeat(e.n) + '</b>' + '○'.repeat(3 - e.n) + '</span></div>' +
+      '<p class="q">' + esc(e.q) + '</p>' + '<div class="ej-fig">' + FIG(i, 'f') + '</div>' +
+      '<p class="hint" hidden>Pista: ' + esc(e.h) + '</p>' +
+      '<div class="solx" hidden><div class="ej-dcl"><span>Diagrama de cuerpo libre</span>' + FIG(i, 'd') + '</div><ol>' + e.s.map(x => '<li>' + esc(x) + '</li>').join('') + '</ol><div class="answer"><b>Respuesta:</b> ' + esc(e.a) + '</div></div>' +
+      '<div class="ej-act"><button type="button" class="btn-g b-h">Pista</button><button type="button" class="btn-g b-s">Ver solución</button>' +
+      '<label class="check"><input type="checkbox" id="ejc-' + (i + 1) + '">Resuelto</label></div>';
+    const hint = card.querySelector('.hint'), sol = card.querySelector('.solx');
+    const bh = card.querySelector('.b-h'), bs = card.querySelector('.b-s');
+    bh.onclick = () => { hint.hidden = !hint.hidden; bh.textContent = hint.hidden ? 'Pista' : 'Ocultar pista'; };
+    bs.onclick = () => { sol.hidden = !sol.hidden; bs.textContent = sol.hidden ? 'Ver solución' : 'Ocultar solución'; };
+    const cb = card.querySelector('input');
+    cb.checked = !!done[i + 1];
+    card.classList.toggle('done', cb.checked);
+    cb.onchange = () => {
+      done[i + 1] = cb.checked; card.classList.toggle('done', cb.checked);
+      try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (err) {}
+      stats(); if (hideDone) render();
+    };
+    e.el = card; bank.append(card);
+  });
+  const empty = document.createElement('p'); empty.className = 'empty'; empty.textContent = 'No quedan ejercicios con estos filtros. Cambia el tema o el nivel.'; bank.append(empty);
+
+  function visible() { return EJ.filter((e, i) => (tema === 'all' || e.t === tema) && (!nivel || e.n === nivel) && !(hideDone && done[i + 1])); }
+  function render() {
+    const v = new Set(visible());
+    EJ.forEach(e => e.el.hidden = !v.has(e));
+    empty.hidden = v.size > 0;
+  }
+  function stats() {
+    const n = Object.values(done).filter(Boolean).length;
+    document.getElementById('bank-count').textContent = n + ' de ' + EJ.length + ' resueltos';
+    document.getElementById('bank-bar').style.width = (100 * n / EJ.length) + '%';
+  }
+  const hd = document.getElementById('hide-done');
+  hd.onclick = () => { hideDone = !hideDone; hd.setAttribute('aria-pressed', hideDone); hd.textContent = hideDone ? 'Mostrar resueltos' : 'Ocultar resueltos'; render(); };
+  document.getElementById('rnd').onclick = () => {
+    let pool = visible().filter(e => !done[EJ.indexOf(e) + 1]);
+    if (!pool.length) pool = visible();
+    if (!pool.length) return;
+    const e = pool[Math.floor(Math.random() * pool.length)];
+    e.el.scrollIntoView({ block: 'center' });
+    e.el.classList.add('flash'); setTimeout(() => e.el.classList.remove('flash'), 1200);
+  };
+  render(); stats();
+})();
+</script>
+</body></html>
