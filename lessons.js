@@ -137,11 +137,20 @@ const LF = (() => {
     dcl_fig() { return beam({ L: 6, sup: [{ x: 0, t: 'pin', n: 'A' }, { x: 6, t: 'roller', n: 'B' }], P: [{ x: 2, ang: -90, lab: '12 kN' }], W: [{ x1: 3, x2: 6, w1: 2, w2: 2, lab: '2 kN/m' }], D: [[0, 2, '2 m'], [2, 3, '1 m'], [3, 6, '3 m']] }, 'f'); },
     dcl_dcl() { return beam({ L: 6, sup: [{ x: 0, t: 'pin', n: 'A' }, { x: 6, t: 'roller', n: 'B' }], P: [{ x: 2, ang: -90, lab: '12 kN' }], W: [{ x1: 3, x2: 6, w1: 2, w2: 2, lab: '2 kN/m' }], D: [[0, 2, '2 m'], [2, 3, '1 m'], [3, 6, '3 m']] }, 'd'); },
     dcl_error() {
-      let s = T(85, 22, '✗ Mal', 'fl') + hatchG(20, 150, 150) + box(50, 100, 70, 50, '') + pol(85, 150, -90, 40, 'f', 'fuerza sobre el piso', false, [0, 6]);
-      s += line(170, 20, 170, 200, 'dimL');
-      s += T(255, 22, '✓ Bien', 'rl') + box(220, 90, 70, 50, '') + pol(255, 115, -90, 50, 'f', 'W', false, [12, 0]) + pol(255, 140, 90, 40, 'r', 'N', true, [14, 0]);
-      s += T(85, 200, 'Actúa sobre el piso', 'dl') + T(255, 200, 'Fuerzas sobre el bloque', 'dl');
-      return svg(s, 210);
+      // Izquierda: DCL mal hecho (incluye la fuerza que el bloque hace sobre el piso)
+      let s = T(85, 18, '✗ Mal', 'fl');
+      s += box(45, 40, 80, 70, '') + T(85, 56, 'bloque') + hatchG(25, 145, 110);
+      s += arr(85, 112, 85, 162, 'f') + T(85, 176, 'bloque → piso', 'fl');
+      s += line(66, 122, 104, 156, 'f', 'stroke-width="3"') + line(104, 122, 66, 156, 'f', 'stroke-width="3"');
+      s += line(170, 10, 170, 235, 'dimL');
+      // Derecha: DCL correcto (bloque aislado, solo fuerzas sobre él)
+      s += T(255, 18, '✓ Bien', 'rl');
+      s += box(215, 40, 80, 70, '') + T(255, 56, 'bloque');
+      s += arr(240, 80, 240, 150, 'f') + T(240, 164, 'W', 'fl');
+      s += arr(272, 160, 272, 112, 'r') + T(272, 174, 'N', 'rl');
+      s += T(85, 204, 'Actúa sobre el piso:', 'dl') + T(85, 220, 'no va en el DCL', 'dl');
+      s += T(255, 204, 'Solo fuerzas que', 'dl') + T(255, 220, 'actúan sobre el bloque', 'dl');
+      return svg(s, 235);
     },
     negativo() {
       let s = T(85, 16, 'Supones Ay ↑', 'dl') + `<rect class="body" x="30" y="100" width="120" height="10"/>` + pol(70, 110, 90, 50, 'r', 'Ay = −5 kN', true, [0, 4]);
