@@ -256,23 +256,23 @@ footer { position: relative; z-index: 1; text-align: center; color: var(--muted)
 /* ===== Tema monocromo: blanco / negro + azul de acento ===== */
 :root {
   --bg: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --accent: #0071e3; --accent-soft: transparent;
-  --good: #0071e3; --warn: #0071e3;
+  --good: #248a3d; --warn: #c93400; --comp: #8944ab;
   --glass: #ffffff; --glass-strong: #ffffff; --glass-edge: #d2d2d7; --glass-line: rgba(60,60,67,.14);
-  --glass-shadow: none; --ink: #1d1d1f; --force: #1d1d1f; --react: #0071e3; --dim: #86868b; --separator: rgba(60,60,67,.14);
+  --glass-shadow: none; --ink: #1d1d1f; --force: #e30000; --react: #0071e3; --dim: #86868b; --separator: rgba(60,60,67,.14);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #000000; --fg: #f5f5f7; --muted: #98989d; --accent: #0a84ff; --accent-soft: transparent;
-    --good: #0a84ff; --warn: #0a84ff;
+    --good: #30d158; --warn: #ff9f0a; --comp: #bf5af2;
     --glass: #000000; --glass-strong: #000000; --glass-edge: #38383a; --glass-line: rgba(84,84,88,.55);
-    --glass-shadow: none; --ink: #f5f5f7; --force: #f5f5f7; --react: #0a84ff; --dim: #8e8e93; --separator: rgba(84,84,88,.55);
+    --glass-shadow: none; --ink: #f5f5f7; --force: #ff6961; --react: #0a84ff; --dim: #8e8e93; --separator: rgba(84,84,88,.55);
   }
 }
 :root[data-theme="dark"] {
   --bg: #000000; --fg: #f5f5f7; --muted: #98989d; --accent: #0a84ff; --accent-soft: transparent;
-  --good: #0a84ff; --warn: #0a84ff;
+  --good: #30d158; --warn: #ff9f0a; --comp: #bf5af2;
   --glass: #000000; --glass-strong: #000000; --glass-edge: #38383a; --glass-line: rgba(84,84,88,.55);
-  --glass-shadow: none; --ink: #f5f5f7; --force: #f5f5f7; --react: #0a84ff; --dim: #8e8e93; --separator: rgba(84,84,88,.55);
+  --glass-shadow: none; --ink: #f5f5f7; --force: #ff6961; --react: #0a84ff; --dim: #8e8e93; --separator: rgba(84,84,88,.55);
 }
 .glass { -webkit-backdrop-filter: none; backdrop-filter: none; }
 nav.glass { -webkit-backdrop-filter: blur(20px) saturate(180%); backdrop-filter: blur(20px) saturate(180%); background: color-mix(in srgb, var(--bg) 82%, transparent); }
@@ -313,6 +313,28 @@ td .unk { color: var(--accent); }
 @media (hover: hover) and (pointer: fine) { .site-footer .socials a:hover { color: var(--accent); } }
 @media (max-width: 640px) { .site-footer { flex-direction: column; align-items: center; text-align: center; } .site-footer .socials { justify-content: center; } }
 
+
+/* Colores de apoyo: diagramas y botones (los fondos siguen blancos o negros) */
+svg .rd { stroke: var(--comp); }
+svg .rdf { fill: var(--comp); }
+svg text.rdl { fill: var(--comp); }
+.answer { border-color: var(--good); }
+.answer b { color: var(--good); }
+.note.warn b { color: var(--warn); }
+.note.good b { color: var(--good); }
+.ej.done { border-color: var(--good); }
+.check:has(input:checked) { color: var(--good); }
+.check input:checked { background: var(--good); border-color: var(--good); }
+.bar i { background: var(--good); }
+.lvl b { color: var(--warn); }
+.ej .b-h { border-color: var(--warn); color: var(--warn); }
+.ej .b-s { background: var(--good); border-color: var(--good); color: #fff; }
+.reveal { background: var(--good); color: #fff; }
+#rnd { background: var(--accent); color: #fff; }
+#hide-done { border-color: var(--glass-edge); color: var(--fg); }
+.ej .hint { border-left-color: var(--warn); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ej .b-s, :root:not([data-theme="light"]) .reveal { color: #000; } }
+:root[data-theme="dark"] .ej .b-s, :root[data-theme="dark"] .reveal { color: #000; }
 /* Fórmulas con MathJax (LaTeX) */
 .formula { font-family: var(--font); font-size: 17px; line-height: 2; }
 .step .formula { font-size: 16px; }
@@ -596,7 +618,7 @@ mjx-container[display="false"] { margin: 0 .1em; }
         <button type="button" id="b-practice" aria-pressed="false">Modo práctica</button>
       </div>
     </div>
-    <p style="color:var(--muted);max-width:66ch">En modo práctica las soluciones se ocultan: intenta cada problema en papel y luego revélalo. Negro = fuerzas aplicadas, azul = reacciones o incógnitas.</p>
+    <p style="color:var(--muted);max-width:66ch">En modo práctica las soluciones se ocultan: intenta cada problema en papel y luego revélalo. Rojo = fuerzas aplicadas, azul = reacciones o incógnitas, morado = componentes.</p>
 
     <!-- E1 -->
     <article class="ex">
