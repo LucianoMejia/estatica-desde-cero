@@ -271,6 +271,37 @@ const LF = (() => {
       s += line(cx + 26, by, cx + 26, cy - 4, 'dimL') + T(cx + 50, (by + cy) / 2, '0.24 m', 'dl');
       return svg(s, 190);
     },
+
+    placa_f() {
+      const k = 0.3, x0 = 70, yb = 165, w = 600 * k, hh = 400 * k, bx = x0 + w;
+      let s = wallL(x0 - 14, yb - hh, yb + 10);
+      s += `<rect class="body" x="${x0}" y="${yb - hh}" width="${w}" height="${hh}" rx="3"/>`;
+      const ay = yb - 150 * k;
+      s += line(x0 - 14, ay, x0, ay, 'ink', 'stroke-width="4"') + `<circle class="body" cx="${x0}" cy="${ay}" r="5"/>` + T(x0 + 14, ay, 'A');
+      s += `<circle class="inkf" cx="${x0 + w / 2}" cy="${yb - hh / 2}" r="3.5"/>` + T(x0 + w / 2 + 12, yb - hh / 2 + 10, 'G') + pol(x0 + w / 2, yb - hh / 2, -90, 40, 'f', '200 N', false, [26, -8]);
+      s += `<circle class="body" cx="${bx}" cy="${yb + 7}" r="7"/>` + T(bx + 14, yb - 8, 'B');
+      const c = Math.SQRT1_2, px = bx + 7 * c, py = yb + 7 + 7 * c;
+      // superficie que sube hacia la derecha a 45°; el rodillo queda arriba a la izquierda
+      s += line(px - 45 * c, py + 45 * c, px + 45 * c, py - 45 * c, 'ink', 'stroke-width="2"');
+      for (let t = -40; t <= 40; t += 9) s += line(px + t * c, py - t * c, px + t * c + 7 * c, py - t * c + 7 * c, 'hatch');
+      s += line(px - 45 * c, py + 45 * c, px - 45 * c + 50, py + 45 * c, 'dimL') + T(px - 45 * c + 24, py + 45 * c - 10, '45°', 'dl');
+      s += line(x0 - 30, ay, x0 - 30, yb, 'dimL') + T(x0 - 44, (ay + yb) / 2, 'h', 'dl');
+      s += dim(x0, x0 + w / 2, yb - hh - 32, '300 mm') + dim(x0 + w / 2, bx, yb - hh - 32, '300 mm');
+      s += line(bx + 30, yb - hh, bx + 30, yb, 'dimL') + T(bx + 50, yb - hh / 2, '400', 'dl');
+      return svg(s, 235);
+    },
+    placa_d() {
+      const k = 0.3, x0 = 70, yb = 165, w = 600 * k, hh = 400 * k, bx = x0 + w;
+      let s = `<rect class="body" x="${x0}" y="${yb - hh}" width="${w}" height="${hh}" rx="3"/>`;
+      const ay = yb - 150 * k;
+      s += `<circle class="body" cx="${x0}" cy="${ay}" r="5"/>` + T(x0 + 14, ay - 10, 'A');
+      s += pol(x0 - 4, ay, 0, 40, 'r', 'Ax', true) + pol(x0, ay + 4, 90, 40, 'r', 'Ay', true, [-16, 0]);
+      s += `<circle class="inkf" cx="${x0 + w / 2}" cy="${yb - hh / 2}" r="3.5"/>` + pol(x0 + w / 2, yb - hh / 2, -90, 40, 'f', '200 N', false, [30, -14]);
+      s += pol(bx, yb, 135, 64, 'r', 'B', true, [-8, 0]);
+      s += pol(bx, yb, 180, 0.1, 'r') + line(bx, yb, bx + 50, yb, 'dimL') + T(bx + 36, yb + 14, '45°', 'dl');
+      s += line(x0 - 34, ay, x0 - 34, yb, 'dimL') + T(x0 - 50, (ay + yb) / 2, '150', 'dl') + T(170, 222, 'DCL para h = 150 mm', 'dl');
+      return svg(s, 230);
+    },
     /* ---- Módulo 6 ---- */
     estrategia() {
       let s = beam({ L: 8, sup: [{ x: 0, t: 'pin', n: 'A' }, { x: 8, t: 'roller', n: 'B' }], P: [{ x: 2, ang: -90, lab: '10 kN' }], W: [{ x1: 4, x2: 8, w1: 3, w2: 3 }], D: [[0, 2, '2 m'], [2, 4, '2 m'], [4, 8, '4 m']] }, 'd');

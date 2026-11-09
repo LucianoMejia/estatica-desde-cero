@@ -307,6 +307,55 @@
         <div class="answer"><b>\(T = 1875\ \text{N}\); \(C = 2286\ \text{N}\) a \(49.0^\circ\) (\(C_x = 1500\ \text{N} \rightarrow,\ C_y = 1725\ \text{N} \uparrow\)).</b> La tensión es más de tres veces la carga total porque el cable solo hace momento con su componente horizontal, que tiene un brazo corto (0.24 m). Si subes B, el brazo crece y la tensión baja.</div>
       </div>
     </article>
+    <article class="ex ex-deep">
+      <span class="tag">Ejemplo 6c · Placa con rodillo en un plano inclinado (a detalle)</span>
+      <div class="ex-top">
+        <p class="q">Una placa rectangular de 600 mm de ancho y 400 mm de alto pesa 200 N, con su centro de gravedad G en el centro. Se apoya en un pasador A, fijo a una pared en el borde izquierdo a una altura h sobre la esquina inferior, y en un rodillo B en la esquina inferior derecha, que descansa sobre una superficie inclinada 45°. Halla las reacciones en A y B cuando a) h = 0 y b) h = 150 mm.</p>
+        <div class="fig" data-lf="placa_f"></div>
+      </div>
+      <div class="sol">
+        <div class="steps">
+          <div class="step"><div><b>Qué da cada apoyo</b><span><b>A es un pasador</b>: da dos incógnitas, \(A_x\) y \(A_y\). <b>B es un rodillo</b>: solo puede empujar <b>perpendicular a la superficie</b> en la que rueda. Si la superficie está a 45°, su perpendicular también forma 45° con la horizontal y empuja la placa hacia arriba y a la izquierda. En total hay 3 incógnitas: \(A_x\), \(A_y\) y B.</span><div class="formula">\(B_x = -B\cos 45^\circ = -0.7071\,B \qquad B_y = +B\,\operatorname{sen}45^\circ = +0.7071\,B\)</div></div></div>
+          <div class="step"><div><b>Coordenadas</b><span>Origen en la esquina inferior izquierda, en milímetros: \(A = (0,\ h)\), \(G = (300,\ 200)\), \(B = (600,\ 0)\). Para tomar momentos en A, mide todo <b>desde A</b>: resta la posición de A a cada punto.</span></div></div>
+          <div class="step"><div><b>Diagrama de cuerpo libre</b><span>Quita la pared y el plano inclinado y pon sus fuerzas: \(A_x\) y \(A_y\) en A, el peso de 200 N ↓ en G y B a 45° hacia arriba y a la izquierda.</span></div></div>
+        </div>
+        <div class="fig" data-lf="placa_d"></div>
+        <h3 class="sub">Caso a) h = 0</h3>
+        <div class="steps">
+          <div class="step"><div><b>Momentos en A</b><span>Desde A = (0, 0): G queda en (300, 200) y B en (600, 0).</span>
+            <div class="tbl mtable"><table>
+              <thead><tr><th>Fuerza</th><th>(x, y) desde A</th><th>\(x\,F_y\)</th><th>\(-y\,F_x\)</th><th>Momento</th></tr></thead>
+              <tbody>
+                <tr><td>\(A_x,\ A_y\)</td><td>(0, 0)</td><td class="z">\(0\)</td><td class="z">\(0\)</td><td class="z">0</td></tr>
+                <tr><td>Peso 200 N</td><td>(300, 200)</td><td>\(300(-200) = -60\,000\)</td><td class="z">\(-200\cdot 0 = 0\)</td><td>\(-60\,000\) ↻</td></tr>
+                <tr><td>B</td><td>(600, 0)</td><td>\(600(0.7071B) = 424.3B\)</td><td class="z">\(-0\cdot(-0.7071B) = 0\)</td><td>\(+424.3B\) ↺</td></tr>
+              </tbody>
+            </table></div>
+            <span>B está a la misma altura que A (y = 0), así que su componente horizontal pasa por la línea de A y no hace momento.</span>
+            <div class="formula">\(424.3\,B - 60\,000 = 0 \;\rightarrow\; B = 141.4\ \text{N}\)</div></div></div>
+          <div class="step"><div><b>Fuerzas</b><div class="formula">\(\Sigma F_x:\ A_x - 0.7071(141.4) = 0 \;\rightarrow\; A_x = 100\ \text{N}\ (\rightarrow)\)<br>\(\Sigma F_y:\ A_y + 0.7071(141.4) - 200 = 0 \;\rightarrow\; A_y = 100\ \text{N}\ (\uparrow)\)</div></div></div>
+        </div>
+        <div class="answer"><b>a) \(A = 141.4\ \text{N}\) a 45° (↗) y \(B = 141.4\ \text{N}\) a 45° (↖).</b> Los dos apoyos se reparten el peso por igual.</div>
+        <h3 class="sub">Caso b) h = 150 mm</h3>
+        <div class="steps">
+          <div class="step"><div><b>Momentos en A</b><span>Ahora A = (0, 150). Restando: G queda en (300, 50) y B en (600, −150).</span>
+            <div class="tbl mtable"><table>
+              <thead><tr><th>Fuerza</th><th>(x, y) desde A</th><th>\(x\,F_y\)</th><th>\(-y\,F_x\)</th><th>Momento</th></tr></thead>
+              <tbody>
+                <tr><td>\(A_x,\ A_y\)</td><td>(0, 0)</td><td class="z">\(0\)</td><td class="z">\(0\)</td><td class="z">0</td></tr>
+                <tr><td>Peso 200 N</td><td>(300, 50)</td><td>\(-60\,000\)</td><td class="z">\(-50\cdot 0 = 0\)</td><td>\(-60\,000\) ↻</td></tr>
+                <tr><td>B</td><td>(600, −150)</td><td>\(424.3B\)</td><td>\(-(-150)(-0.7071B) = -106.1B\)</td><td>\(+318.2B\)</td></tr>
+              </tbody>
+            </table></div>
+            <span><b>Esto es lo nuevo:</b> B está 150 mm <b>por debajo</b> de A, así que su componente horizontal sí hace momento. Empuja hacia la izquierda por debajo de A, lo que gira en sentido horario, en contra de la componente vertical. El brazo efectivo baja de 424.3 a 318.2, y B tiene que ser mayor.</span>
+            <div class="formula">\(318.2\,B - 60\,000 = 0 \;\rightarrow\; B = 188.6\ \text{N}\)</div></div></div>
+          <div class="step"><div><b>Fuerzas</b><div class="formula">\(\Sigma F_x:\ A_x - 0.7071(188.6) = 0 \;\rightarrow\; A_x = 133.3\ \text{N}\ (\rightarrow)\)<br>\(\Sigma F_y:\ A_y + 0.7071(188.6) - 200 = 0 \;\rightarrow\; A_y = 66.7\ \text{N}\ (\uparrow)\)</div></div></div>
+          <div class="step"><div><b>Reacción total en A</b><div class="formula">\(A = \sqrt{133.3^2 + 66.7^2} = 149.1\ \text{N}\)<br>\(\theta = \tan^{-1}\!\left(\dfrac{66.7}{133.3}\right) = 26.6^\circ\)</div></div></div>
+          <div class="step"><div><b>Comprobación: momentos en B</b><span>Desde B = (600, 0): A queda en (−600, 150) y G en (−300, 200). El rodillo pasa por B y vale cero.</span><div class="formula">\(\Sigma M_B = (-600)(66.7) - (150)(133.3) + (-300)(-200)\)<br>\(= -40\,000 - 20\,000 + 60\,000 = 0\ \checkmark\)</div></div></div>
+        </div>
+        <div class="answer"><b>b) \(A = 149.1\ \text{N}\) a 26.6° (↗) y \(B = 188.6\ \text{N}\) a 45° (↖).</b> Al subir A, el rodillo carga más y A carga menos en vertical. Si A subiera hasta h = 300 mm, \(A_y\) llegaría a cero; más arriba, el pasador tendría que jalar la placa hacia abajo.</div>
+      </div>
+    </article>
     <div class="quiz"></div>
   </section>
 
