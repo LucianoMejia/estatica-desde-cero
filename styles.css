@@ -132,7 +132,7 @@ table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 15p
 th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--glass-line); vertical-align: middle; }
 th { font: 600 12px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
 tr:last-child td { border-bottom: 0; }
-td svg { display: block; width: 84px; height: 54px; }
+td > svg { display: block; width: 84px; height: 54px; }
 td .unk { font: 600 15px var(--mono); color: var(--react); }
 
 /* SVG de diagramas */
@@ -405,3 +405,9 @@ h3.sub { margin: 10px 0 0; font-size: 22px; letter-spacing: -.02em; }
 .mres .neg { color: var(--force); }
 .mres .small { color: var(--muted); font: 13px var(--mono); }
 @media (prefers-reduced-motion: reduce) { #mlab g { transition: none !important; } }
+
+/* Tabla de momentos */
+.mtable { margin: 6px 0; }
+.mtable table { min-width: 620px; font-size: 14px; }
+.mtable td.z { color: var(--muted); background: var(--glass-line); }
+.ex-deep .q { font-size: 16px; }

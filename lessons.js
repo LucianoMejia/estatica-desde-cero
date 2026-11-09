@@ -246,6 +246,31 @@ const LF = (() => {
       s += T(170, 206, 'ΣM_A = −100 + 600 − 600 = −100 N·m ↻', '');
       return svg(s, 215);
     },
+
+    mensula_f() {
+      const k = 230, cx = 100, cy = 140, bx = cx, by = cy - 0.24 * k, ax = cx - 0.32 * k, dx = cx + 0.8 * k, l1 = cx + 0.4 * k;
+      let s = hatchG(10, 330, cy + 12);
+      s += pin(ax, cy - 6) + `<circle class="body" cx="${ax}" cy="${cy - 6}" r="4"/>` + T(ax - 10, cy - 18, 'A');
+      s += line(ax, cy - 6, bx, by, 'ink', 'stroke-dasharray="5 4" stroke-width="1.6"');
+      s += `<rect class="body" x="${cx - 5}" y="${by}" width="10" height="${cy - by}"/><rect class="body" x="${cx}" y="${cy - 10}" width="${dx - cx}" height="10"/>`;
+      s += pin(cx, cy) + `<circle class="body" cx="${cx}" cy="${cy - 4}" r="4"/>` + T(cx + 14, cy - 18, 'C') + `<circle class="body" cx="${bx}" cy="${by}" r="4"/>` + T(bx + 12, by - 6, 'B') + T(dx + 10, cy - 16, 'D');
+      s += pol(l1, cy - 10, -90, 40, 'f', '300 N', true) + pol(dx - 4, cy - 10, -90, 40, 'f', '300 N', true);
+      s += line(ax - 14, cy - 6, ax - 14, by, 'dimL') + T(ax - 4, by - 8, '0.24 m', 'dl');
+      s += dim(ax, cx, cy + 30, '0.32 m') + dim(cx, l1, cy + 30, '0.4 m') + dim(l1, dx, cy + 30, '0.4 m');
+      return svg(s, 190);
+    },
+    mensula_d() {
+      const k = 230, cx = 110, cy = 140, bx = cx, by = cy - 0.24 * k, dx = cx + 0.8 * k, l1 = cx + 0.4 * k;
+      const a = Math.atan2(0.24, 0.32) / D;
+      let s = `<rect class="body" x="${cx - 5}" y="${by}" width="10" height="${cy - by}"/><rect class="body" x="${cx}" y="${cy - 10}" width="${dx - cx}" height="10"/>`;
+      s += pol(bx, by, 180 + a, 62, 'r', 'T', false, [-8, -4]);
+      s += pol(bx, by, 180, 50, 'rd', '0.8T', false, [0, -12]) + pol(bx, by, -90, 38, 'rd', '0.6T', false, [-22, 0]);
+      s += pol(cx - 6, cy - 4, 0, 40, 'r', 'Cx', true) + pol(cx, cy, 90, 40, 'r', 'Cy', true, [16, 0]);
+      s += pol(l1, cy - 10, -90, 40, 'f', '300 N', true) + pol(dx - 4, cy - 10, -90, 40, 'f', '300 N', true);
+      s += `<circle class="inkf" cx="${cx}" cy="${cy - 4}" r="3.5"/>` + T(cx + 16, cy + 8, 'C', '') + T(bx + 14, by - 4, 'B', '');
+      s += line(cx + 26, by, cx + 26, cy - 4, 'dimL') + T(cx + 50, (by + cy) / 2, '0.24 m', 'dl');
+      return svg(s, 190);
+    },
     /* ---- Módulo 6 ---- */
     estrategia() {
       let s = beam({ L: 8, sup: [{ x: 0, t: 'pin', n: 'A' }, { x: 8, t: 'roller', n: 'B' }], P: [{ x: 2, ang: -90, lab: '10 kN' }], W: [{ x1: 4, x2: 8, w1: 3, w2: 3 }], D: [[0, 2, '2 m'], [2, 4, '2 m'], [4, 8, '4 m']] }, 'd');

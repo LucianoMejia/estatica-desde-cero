@@ -268,6 +268,45 @@
         <div class="answer"><b>\(T = 1400\,\text{N}, A_x = 1212.4\,\text{N}, A_y = 100\,\text{N} \uparrow\).</b> La tensión es mucho mayor que las cargas porque el cable es poco inclinado.</div>
       </div>
     </article>
+    <article class="ex ex-deep">
+      <span class="tag">Ejemplo 6b · Ménsula articulada con cable (a detalle)</span>
+      <div class="ex-top">
+        <p class="q">Una ménsula en forma de L, BCD, está articulada al piso en C. Su brazo vertical CB mide 0.24 m y su brazo horizontal CD mide 0.8 m. Un cable va desde B hasta un anclaje A en el piso, 0.32 m a la izquierda de C. Sobre el brazo horizontal cuelgan 300 N a 0.4 m de C y otros 300 N en el extremo D. Halla la tensión del cable y la reacción en C.</p>
+        <div class="fig" data-lf="mensula_f"></div>
+      </div>
+      <div class="sol">
+        <div class="steps">
+          <div class="step"><div><b>Entiende las piezas</b><span>Hay dos cuerpos: la <b>ménsula</b> (lo que analizamos) y el <b>cable</b>. El cable solo tiene fuerzas en sus dos extremos, así que es un <b>elemento de dos fuerzas</b>: su tensión va exactamente a lo largo de la línea AB y solo jala. Gracias a eso, el cable aporta una sola incógnita: T.</span></div></div>
+          <div class="step"><div><b>Geometría del cable</b><span>De B a A el cable baja 0.24 m y va 0.32 m a la izquierda. Es un triángulo 3-4-5 (0.24, 0.32, 0.40):</span><div class="formula">\(AB = \sqrt{0.32^2 + 0.24^2} = 0.40\ \text{m}\)<br>\(\text{horizontal} = \tfrac{0.32}{0.40} = 0.8 \qquad \text{vertical} = \tfrac{0.24}{0.40} = 0.6\)</div></div></div>
+          <div class="step"><div><b>Diagrama de cuerpo libre de la ménsula</b><span>Quita el piso y el cable y pon sus fuerzas. El pasador C da \(C_x\) y \(C_y\) (sentido supuesto: → y ↑). El cable jala B <b>hacia A</b>: hacia la izquierda y hacia abajo. Las cargas son 300 N ↓ en \(x = 0.4\) y en \(x = 0.8\). En total hay 3 incógnitas, \(T\), \(C_x\) y \(C_y\), y tenemos 3 ecuaciones.</span></div></div>
+          <div class="step"><div><b>Componentes de la tensión en B</b><div class="formula">\(T_x = -0.8\,T \ (\leftarrow) \qquad T_y = -0.6\,T \ (\downarrow)\)</div><span>Los signos menos son porque apunta a la izquierda y hacia abajo.</span></div></div>
+          <div class="step"><div><b>¿Dónde tomar momentos? En C</b><span>En C se cruzan dos incógnitas (\(C_x\) y \(C_y\)). Si tomamos momentos ahí, ambas se multiplican por cero y queda una ecuación con una sola incógnita: T. Origen en C, con \(M = x\,F_y - y\,F_x\) y ↺ positivo:</span>
+            <div class="tbl mtable"><table>
+              <thead><tr><th>Fuerza</th><th>Punto (x, y)</th><th>\(x\,F_y\)</th><th>\(-y\,F_x\)</th><th>Momento</th></tr></thead>
+              <tbody>
+                <tr><td>\(C_x\)</td><td>(0, 0)</td><td class="z">\(0\)</td><td class="z">\(-0\cdot C_x = 0\)</td><td class="z">0</td></tr>
+                <tr><td>\(C_y\)</td><td>(0, 0)</td><td class="z">\(0\cdot C_y = 0\)</td><td class="z">\(0\)</td><td class="z">0</td></tr>
+                <tr><td>Tensión en B</td><td>(0, 0.24)</td><td class="z">\(0\cdot(-0.6T) = 0\)</td><td>\(-0.24(-0.8T) = +0.192T\)</td><td>\(+0.192T\) ↺</td></tr>
+                <tr><td>300 N</td><td>(0.4, 0)</td><td>\(0.4(-300) = -120\)</td><td class="z">\(-0\cdot 0 = 0\)</td><td>\(-120\) ↻</td></tr>
+                <tr><td>300 N en D</td><td>(0.8, 0)</td><td>\(0.8(-300) = -240\)</td><td class="z">\(-0\cdot 0 = 0\)</td><td>\(-240\) ↻</td></tr>
+              </tbody>
+            </table></div>
+            <span>Las celdas grises son las que quedan multiplicadas por cero:</span>
+            <ul class="clean">
+              <li><b>\(C_x\) y \(C_y\)</b> actúan en C, así que su distancia a C es cero.</li>
+              <li><b>\(T_y\)</b> actúa en B, que está justo encima de C. Una fuerza vertical en B apunta hacia C y su línea de acción pasa por C, así que no hace girar.</li>
+              <li><b>Las cargas</b> son verticales y están a la altura de C, así que solo cuenta su brazo horizontal.</li>
+            </ul>
+          </div></div>
+          <div class="step"><div><b>Ecuación de momentos y tensión</b><div class="formula">\(\Sigma M_C = 0.192\,T - 120 - 240 = 0\)<br>\(T = \dfrac{360}{0.192} = 1875\ \text{N}\)</div><span>Sale positiva, como debe ser en un cable: está jalando.</span></div></div>
+          <div class="step"><div><b>\(\Sigma F_x = 0\)</b><div class="formula">\(C_x - 0.8(1875) = 0 \;\rightarrow\; C_x = 1500\ \text{N}\ (\rightarrow)\)</div><span>El cable jala la ménsula hacia la izquierda, así que el pasador la sostiene hacia la derecha.</span></div></div>
+          <div class="step"><div><b>\(\Sigma F_y = 0\)</b><div class="formula">\(C_y - 0.6(1875) - 300 - 300 = 0 \;\rightarrow\; C_y = 1725\ \text{N}\ (\uparrow)\)</div><span>El pasador sostiene las dos cargas y además la parte del cable que jala hacia abajo.</span></div></div>
+          <div class="step"><div><b>Reacción total en C</b><div class="formula">\(C = \sqrt{1500^2 + 1725^2} = 2286\ \text{N}\)<br>\(\theta = \tan^{-1}\!\left(\dfrac{1725}{1500}\right) = 49.0^\circ\)</div></div></div>
+          <div class="step"><div><b>Comprobación: momentos en B</b><span>Si todo está bien, el momento respecto a otro punto también da cero. En B \((0,\ 0.24)\) la tensión pasa por B y vale cero; \(C_y\) es vertical bajo B y también da cero:</span><div class="formula">\(\Sigma M_B = 0.24(1500) - 0.4(300) - 0.8(300) = 360 - 120 - 240 = 0\ \checkmark\)</div></div></div>
+        </div>
+        <div class="answer"><b>\(T = 1875\ \text{N}\); \(C = 2286\ \text{N}\) a \(49.0^\circ\) (\(C_x = 1500\ \text{N} \rightarrow,\ C_y = 1725\ \text{N} \uparrow\)).</b> La tensión es más de tres veces la carga total porque el cable solo hace momento con su componente horizontal, que tiene un brazo corto (0.24 m). Si subes B, el brazo crece y la tensión baja.</div>
+      </div>
+    </article>
     <div class="quiz"></div>
   </section>
 
